@@ -1,7 +1,6 @@
-import Meal from './Meal';
+import Meal from "./Meal";
 
-function getMeals():Meal[] {
-
+function getMeals(): Meal[] {
   const meal1 = new Meal();
   meal1.name = "hamburger";
 
