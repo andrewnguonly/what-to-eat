@@ -15,6 +15,10 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: pre-commit/action@v2.0.3
 
+      - name: Run pre-commit
+        run: |
+          pre-commit run
+
   test:
     name: Tests
     runs-on: ubuntu-latest
