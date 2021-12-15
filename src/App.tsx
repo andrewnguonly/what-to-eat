@@ -1,14 +1,29 @@
 import React from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import getMeals from "./Controller";
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    alignItems: "flex-end",
+    width: "50%",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 20,
+  },
   row: {
     alignItems: "center",
     flexDirection: "row",
-    height: 60,
-    paddingLeft: "5%",
-    paddingRight: "5%",
+    height: 50,
+    paddingHorizontal: "5%",
   },
   rowLabel: {
     color: "gray",
@@ -31,10 +46,20 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   title: {
-    color: "black",
-    fontSize: 30,
-    fontWeight: "100",
-    textAlign: "center",
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  titleBar: {
+    alignItems: "center",
+    backgroundColor: "#32CD32",
+    flexDirection: "row",
+    height: 50,
+    paddingHorizontal: "5%",
+  },
+  titleContainer: {
+    alignItems: "flex-start",
+    width: "50%",
   },
 });
 
@@ -43,7 +68,16 @@ const App = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={styles.title}>What to eat?</Text>
+      <View style={styles.titleBar}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>What to eat?</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable onPress={() => Alert.alert("add meal")}>
+            <Text style={styles.buttonText}>add meal</Text>
+          </Pressable>
+        </View>
+      </View>
       <FlatList
         ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
         data={meals}
