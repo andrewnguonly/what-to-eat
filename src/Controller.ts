@@ -1,19 +1,47 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Meal from "./Meal";
 
-function getMeals(): Meal[] {
-  const meal1 = new Meal();
-  meal1.name = "hamburger";
-  meal1.last_eaten_ts = 0;
+export const getMeals = async () => {
+  let keys = [];
+  try {
+    keys = await AsyncStorage.getAllKeys();
+  } catch (e) {
+    // read key error
+  }
+  console.log(`Got keys: ${keys}`);
 
-  const meal2 = new Meal();
-  meal2.name = "pizza";
-  meal2.last_eaten_ts = 2;
+  let pairs = [];
+  try {
+    pairs = await AsyncStorage.multiGet(keys);
+  } catch (e) {
+    // read error
+  }
+  console.log(`Got pairs: ${pairs}`);
 
-  const meal3 = new Meal();
-  meal3.name = "tacos";
-  meal3.last_eaten_ts = 1;
+  let values = pairs.map((pair) => pair[1]);
+  console.log(`Got values: ${values}`);
 
-  return new Array(meal1, meal2, meal3);
-}
+  return values.map((value) => {
+    obj = JSON.parse(value);
+    return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+  });
+};
 
-export default getMeals;
+export const addMeal = async (name) => {
+  const meal = new Meal(name, Date.now(), 1);
+  try {
+    const jsonValue = JSON.stringify(meal);
+    await AsyncStorage.setItem(name, jsonValue);
+  } catch (e) {
+    // save error
+  }
+};
+
+export const deleteMeals = async () => {
+  try {
+    await AsyncStorage.clear();
+  } catch (e) {
+    // clear error
+  }
+  console.log("Deleted all meals.");
+};

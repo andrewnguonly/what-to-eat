@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -8,7 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
-import getMeals from "./Controller";
+import { getMeals } from "./Controller";
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -64,7 +64,15 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-  const meals = getMeals();
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getMeals()
+      .then((data) => setData(data))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -80,7 +88,7 @@ const App = () => {
       </View>
       <FlatList
         ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
-        data={meals}
+        data={data}
         renderItem={({ item }) => (
           <View style={styles.row}>
             <View style={styles.rowTitleCol}>
