@@ -27,8 +27,30 @@ export const getMeals = async () => {
   });
 };
 
+export const getMealByName = async (name) => {
+  try {
+    const value = await AsyncStorage.getItem(name);
+    if (value !== null) {
+      obj = JSON.parse(value);
+      return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+    } else {
+      return null;
+    }
+  } catch (e) {
+    // error reading value
+  }
+};
+
 export const addMeal = async (name) => {
-  const meal = new Meal(name, Date.now(), 1);
+  let eaten_count = 1;
+  const mealObj = getMealByName(name);
+
+  if (mealObj) {
+    eaten_count += mealObj["eaten_count"];
+  }
+
+  const meal = new Meal(name, Date.now(), eaten_count);
+
   try {
     const jsonValue = JSON.stringify(meal);
     await AsyncStorage.setItem(name, jsonValue);
@@ -44,4 +66,14 @@ export const deleteMeals = async () => {
     // clear error
   }
   console.log("Deleted all meals.");
+};
+
+export const deleteMealByName = async (name) => {
+  try {
+    await AsyncStorage.removeItem(name);
+  } catch (e) {
+    // remove error
+  }
+
+  console.log(`Deleted meal: ${name}.`);
 };
