@@ -43,16 +43,15 @@ export const getMealByName = async (name) => {
 
 export const addMeal = async (name) => {
   let eaten_count = 1;
-  const mealObj = getMealByName(name);
+  const meal = await getMealByName(name);
 
-  if (mealObj) {
-    eaten_count += mealObj["eaten_count"];
+  if (meal !== null) {
+    console.log(`Existing meal found: ${meal}.`);
+    eaten_count += meal.eaten_count;
   }
 
-  const meal = new Meal(name, Date.now(), eaten_count);
-
   try {
-    const jsonValue = JSON.stringify(meal);
+    const jsonValue = JSON.stringify(new Meal(name, Date.now(), eaten_count));
     await AsyncStorage.setItem(name, jsonValue);
   } catch (e) {
     // save error

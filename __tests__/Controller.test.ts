@@ -1,17 +1,26 @@
 import AsyncStorageMock from "../__mocks__/@react-native-async-storage/async-storage";
-import {
-  addMeal,
-  deleteMealByName,
-  deleteMeals,
-  getMealByName,
-  getMeals,
-} from "../src/Controller";
+import * as Controller from "../src/Controller";
 import Meal from "../src/Meal";
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 it("get meals", async () => {
   keys = ["burger", "pizza"];
 
-  const meals = await getMeals();
+  AsyncStorageMock.getAllKeys = jest.fn(() => {
+    return Promise.resolve(["burger", "pizza"]);
+  });
+
+  AsyncStorageMock.multiGet = jest.fn((keys) => {
+    return Promise.resolve([
+      ["burger", '{"name":"burger","last_eaten_ts":0,"eaten_count":1}'],
+      ["pizza", '{"name":"pizza","last_eaten_ts":1,"eaten_count":1}'],
+    ]);
+  });
+
+  const meals = await Controller.getMeals();
   expect(AsyncStorageMock.multiGet).toBeCalledWith(keys);
   expect(meals.length).toBe(2);
 
@@ -21,29 +30,56 @@ it("get meals", async () => {
   expect(meal1).toStrictEqual(new Meal(keys[1], 1, 1));
 });
 
-it("get meal by name", async () => {});
+it("get meal by name, meal found", async () => {
+  const mealName = "burger";
 
-// it("add meal", async () => {
+  AsyncStorageMock.getItem = jest.fn(() => {
+    return Promise.resolve(
+      `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":1}`
+    );
+  });
+
+  const meal = await Controller.getMealByName(mealName);
+  expect(meal).toStrictEqual(new Meal(mealName, 0, 1));
+});
+
+it("get meal by name, meal not found", async () => {
+  const mealName = "burger";
+
+  AsyncStorageMock.getItem = jest.fn(() => {
+    return Promise.resolve(null);
+  });
+
+  const meal = await Controller.getMealByName(mealName);
+  expect(meal).toBeNull();
+});
+
+it("add meal, new meal", async () => {});
+
+// it("add meal, existing meal", async () => {
+//   const mealName = "burger";
+
 //   jest
 //     .spyOn(global.Date, "now")
-//     .mockImplementationOnce(() =>
-//       new Date('1970-01-01T00:00:00.000Z').valueOf()
-//     );
+//     .mockReturnValue(new Date('1970-01-01T00:00:00.000Z').valueOf());
 
-//   const mealName = "burger";
-//   const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":1}`;
+//   jest
+//     .spyOn(Controller, "getMealByName")
+//     .mockReturnValue(Promise.resolve(new Meal(mealName, 0, 5)));
 
-//   await addMeal(mealName);
+//   const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":6}`;
+
+//   await Controller.addMeal(mealName);
 //   expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);
 // });
 
 it("delete meals", async () => {
-  await deleteMeals();
+  await Controller.deleteMeals();
   expect(AsyncStorageMock.clear).toBeCalled();
 });
 
 it("delete meal by name", async () => {
   const mealName = "burger";
-  await deleteMealByName(mealName);
+  await Controller.deleteMealByName(mealName);
   expect(AsyncStorageMock.removeItem).toBeCalledWith(mealName);
 });
