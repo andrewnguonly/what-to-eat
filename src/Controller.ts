@@ -46,7 +46,7 @@ export const addMeal = async (name) => {
   const meal = await getMealByName(name);
 
   if (meal !== null) {
-    console.log(`Existing meal found: ${meal}.`);
+    console.log("Existing meal found.");
     eaten_count += meal.eaten_count;
   }
 

@@ -54,24 +54,53 @@ it("get meal by name, meal not found", async () => {
   expect(meal).toBeNull();
 });
 
-it("add meal, new meal", async () => {});
+it("add meal, new meal", async () => {
+  const mealName = "burger";
 
-// it("add meal, existing meal", async () => {
-//   const mealName = "burger";
+  jest
+    .spyOn(global.Date, "now")
+    .mockReturnValue(new Date("1970-01-01T00:00:00.000Z").valueOf());
 
-//   jest
-//     .spyOn(global.Date, "now")
-//     .mockReturnValue(new Date('1970-01-01T00:00:00.000Z').valueOf());
+  // TODO: Figure out how to mock Controller.getMealByName() properly.
+  // Workaround is to mock AsyncStorageMock.getItem() directly.
+  //
+  // jest
+  //   .spyOn(Controller, "getMealByName")
+  //   .mockImplementation(() => Promise.resolve(null));
+  AsyncStorageMock.getItem = jest.fn(() => {
+    return Promise.resolve(null);
+  });
 
-//   jest
-//     .spyOn(Controller, "getMealByName")
-//     .mockReturnValue(Promise.resolve(new Meal(mealName, 0, 5)));
+  const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":1}`;
 
-//   const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":6}`;
+  await Controller.addMeal(mealName);
+  expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);
+});
 
-//   await Controller.addMeal(mealName);
-//   expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);
-// });
+it("add meal, existing meal", async () => {
+  const mealName = "burger";
+
+  jest
+    .spyOn(global.Date, "now")
+    .mockReturnValue(new Date("1970-01-01T00:00:00.000Z").valueOf());
+
+  // TODO: Figure out how to mock Controller.getMealByName() properly.
+  // Workaround is to mock AsyncStorageMock.getItem() directly.
+  //
+  // jest
+  //   .spyOn(Controller, "getMealByName")
+  //   .mockImplementation(() => Promise.resolve(new Meal(mealName, 0, 5)));
+  AsyncStorageMock.getItem = jest.fn(() => {
+    return Promise.resolve(
+      `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":5}`
+    );
+  });
+
+  const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":6}`;
+
+  await Controller.addMeal(mealName);
+  expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);
+});
 
 it("delete meals", async () => {
   await Controller.deleteMeals();
