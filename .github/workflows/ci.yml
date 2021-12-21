@@ -6,6 +6,19 @@ on:
       - main
 
 jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python env
+        uses: actions/setup-python@v2
+
+      - name: Setup pre-commit
+        uses: pre-commit/action@v2.0.3
+
   test:
     name: Tests
     runs-on: ubuntu-latest
