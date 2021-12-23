@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import Dialog from "react-native-dialog";
 import { getMeals } from "./Controller";
 
 const styles = StyleSheet.create({
@@ -66,6 +67,21 @@ const styles = StyleSheet.create({
 const App = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [newMeal, setNewMeal] = useState("");
+
+  const showAddMealDialog = () => {
+    setVisible(true);
+  };
+
+  const handleAddMeal = () => {
+    console.log(newMeal);
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
 
   useEffect(() => {
     getMeals()
@@ -81,8 +97,18 @@ const App = () => {
           <Text style={styles.title}>What to eat?</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Pressable onPress={() => Alert.alert("add meal")}>
+          <Pressable onPress={showAddMealDialog}>
             <Text style={styles.buttonText}>add meal</Text>
+            <Dialog.Container visible={visible}>
+              <Dialog.Title>New meal!</Dialog.Title>
+              <Dialog.Description>Enter your meal</Dialog.Description>
+              <Dialog.Input
+                placeholder="e.g. pizza"
+                onChangeText={(meal) => setNewMeal(meal)}
+              />
+              <Dialog.Button label="Cancel" onPress={handleCancel} />
+              <Dialog.Button label="Eat!" onPress={handleAddMeal} />
+            </Dialog.Container>
           </Pressable>
         </View>
       </View>
