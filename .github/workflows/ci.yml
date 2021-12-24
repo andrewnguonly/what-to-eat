@@ -22,6 +22,20 @@ jobs:
       - name: Setup pre-commit
         uses: pre-commit/action@v2.0.3
 
+  lint:
+    name: Typescript Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@master
+
+      - name: Lint source files
+        run: |
+          yarn tsc
+
   test:
     name: Tests
     runs-on: ubuntu-latest
@@ -36,6 +50,6 @@ jobs:
         run: |
           yarn install
 
-      - name: Run test
+      - name: Run tests
         run: |
           yarn test
