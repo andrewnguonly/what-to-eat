@@ -32,6 +32,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@master
 
+      - name: Install Node modules
+        run: |
+          yarn install
+
       - name: Lint source files
         run: |
           yarn tsc
