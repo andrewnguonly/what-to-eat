@@ -115,7 +115,7 @@ const App = () => {
       <FlatList
         ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
         data={data}
-        renderItem={({ item }) => (
+        renderItem={({ item: Meal }) => (
           <View style={styles.row}>
             <View style={styles.rowTitleCol}>
               <Text style={styles.rowTitle}>{item.name}</Text>

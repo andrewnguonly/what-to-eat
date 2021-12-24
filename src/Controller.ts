@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Meal from "./Meal";
 
 export const getMeals = async () => {
-  let keys = [];
+  let keys: string[] = [];
   try {
     keys = await AsyncStorage.getAllKeys();
   } catch (e) {
@@ -10,7 +10,7 @@ export const getMeals = async () => {
   }
   console.log(`Got keys: ${keys}`);
 
-  let pairs = [];
+  let pairs: [string, string | null][] = [];
   try {
     pairs = await AsyncStorage.multiGet(keys);
   } catch (e) {
@@ -22,16 +22,20 @@ export const getMeals = async () => {
   console.log(`Got values: ${values}`);
 
   return values.map((value) => {
-    obj = JSON.parse(value);
-    return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+    if (value != null) {
+      const obj = JSON.parse(value);
+      return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+    } else {
+      return new Meal("null", 0, 0);
+    }
   });
 };
 
-export const getMealByName = async (name) => {
+export const getMealByName = async (name: string) => {
   try {
     const value = await AsyncStorage.getItem(name);
     if (value !== null) {
-      obj = JSON.parse(value);
+      const obj = JSON.parse(value);
       return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
     } else {
       return null;
@@ -41,11 +45,11 @@ export const getMealByName = async (name) => {
   }
 };
 
-export const addMeal = async (name) => {
+export const addMeal = async (name: string) => {
   let eaten_count = 1;
   const meal = await getMealByName(name);
 
-  if (meal !== null) {
+  if (meal != null) {
     console.log("Existing meal found.");
     eaten_count += meal.eaten_count;
   }
@@ -67,7 +71,7 @@ export const deleteMeals = async () => {
   console.log("Deleted all meals.");
 };
 
-export const deleteMealByName = async (name) => {
+export const deleteMealByName = async (name: string) => {
   try {
     await AsyncStorage.removeItem(name);
   } catch (e) {
