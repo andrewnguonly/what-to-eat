@@ -10,6 +10,9 @@ import {
 } from "react-native";
 import Dialog from "react-native-dialog";
 import { getMeals } from "./Controller";
+import Meal from "./Meal";
+
+let item: Meal;
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
 
 const App = () => {
   const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Meal[]>([]);
   const [visible, setVisible] = useState(false);
   const [newMeal, setNewMeal] = useState("");
 
@@ -115,7 +118,7 @@ const App = () => {
       <FlatList
         ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
         data={data}
-        renderItem={({ item: Meal }) => (
+        renderItem={({ item }) => (
           <View style={styles.row}>
             <View style={styles.rowTitleCol}>
               <Text style={styles.rowTitle}>{item.name}</Text>
