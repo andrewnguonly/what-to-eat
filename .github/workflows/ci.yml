@@ -19,6 +19,13 @@ jobs:
       - name: Setup Python env
         uses: actions/setup-python@v2
 
+      - name: Setup Node
+        uses: actions/setup-node@master
+
+      - name: Install Node modules
+        run: |
+          yarn install
+
       - name: Setup pre-commit
         uses: pre-commit/action@v2.0.3
 
