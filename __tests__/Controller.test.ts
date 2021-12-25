@@ -7,7 +7,7 @@ beforeEach(() => {
 });
 
 it("get meals", async () => {
-  keys = ["burger", "pizza"];
+  const keys = ["burger", "pizza"];
 
   AsyncStorageMock.getAllKeys = jest.fn(() => {
     return Promise.resolve(["burger", "pizza"]);
