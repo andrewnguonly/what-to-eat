@@ -21,14 +21,20 @@ export const getMeals = async () => {
   const values = pairs.map((pair) => pair[1]);
   console.log(`Got values: ${values}`);
 
-  return values.map((value) => {
-    if (value != null) {
-      const obj = JSON.parse(value);
-      return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
-    } else {
-      return new Meal("null", 0, 0);
-    }
-  });
+  return values
+    .map((value) => {
+      if (value != null) {
+        const obj = JSON.parse(value);
+        return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+      } else {
+        return new Meal("null", 0, 0);
+      }
+    })
+    .sort((meal1, meal2) => {
+      // Sort meals in ascending order by last_eaten_ts.
+      // Older meals appear first.
+      return meal1.last_eaten_ts - meal2.last_eaten_ts;
+    });
 };
 
 export const getMealByName = async (name: string) => {

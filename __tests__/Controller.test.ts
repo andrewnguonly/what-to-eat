@@ -7,27 +7,30 @@ beforeEach(() => {
 });
 
 it("get meals", async () => {
-  const keys = ["burger", "pizza"];
+  const keys = ["burger", "pizza", "salad"];
 
   AsyncStorageMock.getAllKeys = jest.fn(() => {
-    return Promise.resolve(["burger", "pizza"]);
+    return Promise.resolve(["burger", "pizza", "salad"]);
   });
 
   AsyncStorageMock.multiGet = jest.fn(() => {
     return Promise.resolve([
-      ["burger", '{"name":"burger","last_eaten_ts":0,"eaten_count":1}'],
-      ["pizza", '{"name":"pizza","last_eaten_ts":1,"eaten_count":1}'],
+      ["burger", '{"name":"burger","last_eaten_ts":1,"eaten_count":1}'],
+      ["pizza", '{"name":"pizza","last_eaten_ts":0,"eaten_count":1}'],
+      ["salad", '{"name":"salad","last_eaten_ts":2,"eaten_count":1}'],
     ]);
   });
 
   const meals = await Controller.getMeals();
   expect(AsyncStorageMock.multiGet).toBeCalledWith(keys);
-  expect(meals.length).toBe(2);
+  expect(meals.length).toBe(3);
 
   const meal0 = meals[0];
   const meal1 = meals[1];
-  expect(meal0).toStrictEqual(new Meal(keys[0], 0, 1));
-  expect(meal1).toStrictEqual(new Meal(keys[1], 1, 1));
+  const meal2 = meals[2];
+  expect(meal0).toStrictEqual(new Meal(keys[1], 0, 1));
+  expect(meal1).toStrictEqual(new Meal(keys[0], 1, 1));
+  expect(meal2).toStrictEqual(new Meal(keys[2], 2, 1));
 });
 
 it("get meal by name, meal found", async () => {
