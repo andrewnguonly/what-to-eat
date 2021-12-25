@@ -11,8 +11,6 @@ import Dialog from "react-native-dialog";
 import { addMeal, getMeals } from "./Controller";
 import Meal from "./Meal";
 
-let item: Meal;
-
 const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "flex-end",
