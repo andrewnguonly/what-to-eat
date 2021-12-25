@@ -18,7 +18,7 @@ export const getMeals = async () => {
   }
   console.log(`Got pairs: ${pairs}`);
 
-  let values = pairs.map((pair) => pair[1]);
+  const values = pairs.map((pair) => pair[1]);
   console.log(`Got values: ${values}`);
 
   return values.map((value) => {

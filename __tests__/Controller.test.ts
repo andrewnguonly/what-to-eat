@@ -13,7 +13,7 @@ it("get meals", async () => {
     return Promise.resolve(["burger", "pizza"]);
   });
 
-  AsyncStorageMock.multiGet = jest.fn((keys) => {
+  AsyncStorageMock.multiGet = jest.fn(() => {
     return Promise.resolve([
       ["burger", '{"name":"burger","last_eaten_ts":0,"eaten_count":1}'],
       ["pizza", '{"name":"pizza","last_eaten_ts":1,"eaten_count":1}'],

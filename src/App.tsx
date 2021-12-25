@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   FlatList,
   Pressable,
   SafeAreaView,
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<Meal[]>([]);
   const [visible, setVisible] = useState(false);
   const [newMeal, setNewMeal] = useState("");
@@ -96,8 +95,8 @@ const App = () => {
   useEffect(() => {
     getMeals()
       .then((data) => setData(data))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      .catch((error) => console.error(error));
+    // .finally(() => setLoading(false));
   }, []);
 
   return (
