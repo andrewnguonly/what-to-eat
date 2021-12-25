@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import Dialog from "react-native-dialog";
-import { getMeals } from "./Controller";
+import { addMeal, getMeals } from "./Controller";
 import Meal from "./Meal";
 
 let item: Meal;
@@ -77,15 +77,22 @@ const App = () => {
     setVisible(true);
   };
 
-  const handleAddMeal = () => {
-    console.log(newMeal);
+  const handleAddMeal = async () => {
+    await addMeal(newMeal);
+    console.log(`Added new meal: ${newMeal}`);
     setVisible(false);
+
+    // refresh meals state data
+    getMeals()
+      .then((data) => setData(data))
+      .catch((error) => console.error(error));
   };
 
   const handleCancel = () => {
     setVisible(false);
   };
 
+  // load meals state data
   useEffect(() => {
     getMeals()
       .then((data) => setData(data))
