@@ -23,7 +23,7 @@ jobs:
         uses: pre-commit/action@v2.0.3
 
   lint:
-    name: Typescript Lint
+    name: Typescript Compile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

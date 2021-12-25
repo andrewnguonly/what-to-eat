@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.14",
-    "@typescript-eslint/eslint-plugin": "^5.8.0",
-    "@typescript-eslint/parser": "^5.8.0",
     "react": "17.0.2",
     "react-native": "0.66.3",
     "react-native-dialog": "^9.2.0"
@@ -25,6 +23,8 @@
     "@types/node": "14.14.2",
     "@types/react-native": "^0.66.4",
     "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
     "babel-jest": "^27.4.5",
     "eslint": "^8.5.0",
     "jest": "^26.6.3",
