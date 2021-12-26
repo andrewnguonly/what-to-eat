@@ -1,6 +1,6 @@
 import "react-native";
 import React from "react";
-import App from "../src/App";
+import App, { formatTs } from "../src/App";
 
 // Note: test renderer must be required after react-native.
 import renderer from "react-test-renderer";
@@ -14,11 +14,26 @@ it("renders correctly", async () => {
   });
 });
 
-// it("formats timestamp correctly", () => {
-//   // mock date to December 25, 2021 12:00:00 AM
-//   jest.spyOn(global, "Date").mockReturnValue(new Date(1640390400000));
+it("formats timestamp correctly", () => {
+  // mock date to December 25, 2021 12:00:00 AM
+  jest.useFakeTimers("modern");
+  jest.setSystemTime(new Date(1640390400000));
 
-//   const ts1 = 1640304000000; // December 24, 2021 12:00:00 AM
+  const ts1 = 1640390400000; // December 25, 2021 12:00:00 AM
+  const ts2 = 1640304000000; // December 24, 2021 12:00:00 AM
+  const ts3 = 1639872000000; // December 19, 2021 12:00:00 AM
+  const ts4 = 1639785600000; // December 18, 2021 12:00:00 AM
+  const ts5 = 1638057600000; // November 28, 2021 12:00:00 AM
+  const ts6 = 1637971200000; // November 27, 2021 12:00:00 AM
+  const ts7 = 1635552000000; // October 30, 2021 12:00:00 AM
 
-//   expect(App.formatTs(ts1)).toBe("today");
-// });
+  expect(formatTs(ts1)).toBe("Today");
+  expect(formatTs(ts2)).toBe("1 day(s) ago");
+  expect(formatTs(ts3)).toBe("6 day(s) ago");
+  expect(formatTs(ts4)).toBe("1 week(s) ago");
+  expect(formatTs(ts5)).toBe("3 week(s) ago");
+  expect(formatTs(ts6)).toBe("1 month(s) ago");
+  expect(formatTs(ts7)).toBe("2 month(s) ago");
+
+  jest.useRealTimers();
+});

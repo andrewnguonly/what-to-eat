@@ -64,6 +64,34 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * This function assumes 1 month = 28 days.
+ */
+export const formatTs = (ts: number) => {
+  const currentDate = new Date();
+  const tsDate = new Date(ts);
+
+  const diffDays = Math.floor(
+    (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
+  );
+
+  console.log(diffDays);
+
+  if (diffDays < 1) {
+    return "Today";
+  } else if (diffDays < 7) {
+    return `${diffDays} day(s) ago`;
+  } else {
+    const diffWeeks = Math.floor(diffDays / 7);
+    if (diffWeeks < 4) {
+      return `${diffWeeks} week(s) ago`;
+    } else {
+      const diffMonths = Math.floor(diffWeeks / 4);
+      return `${diffMonths} month(s) ago`;
+    }
+  }
+};
+
 const App = () => {
   const [data, setData] = useState<Meal[]>([]);
   const [visible, setVisible] = useState(false);
@@ -90,28 +118,6 @@ const App = () => {
     getMeals()
       .then((data) => setData(data))
       .catch((error) => console.error(error));
-  };
-
-  const formatTs = (ts: number) => {
-    const currentDate = new Date();
-    const tsDate = new Date(ts);
-    const diffDays = Math.round(
-      (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
-    );
-
-    if (diffDays < 1) {
-      return "Today";
-    } else if (diffDays < 7) {
-      return `${diffDays} day(s) ago`;
-    } else {
-      const diffWeeks = diffDays / 7;
-      if (diffWeeks < 4) {
-        return `${diffWeeks} week(s) ago`;
-      } else {
-        const diffMonths = diffWeeks / 4;
-        return `${diffMonths} month(s) ago`;
-      }
-    }
   };
 
   // load meals state data
