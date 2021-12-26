@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-  // const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<Meal[]>([]);
   const [visible, setVisible] = useState(false);
   const [newMeal, setNewMeal] = useState("");
@@ -80,21 +79,44 @@ const App = () => {
     setVisible(false);
 
     // refresh meals state data
-    getMeals()
-      .then((data) => setData(data))
-      .catch((error) => console.error(error));
+    refreshData();
   };
 
   const handleCancel = () => {
     setVisible(false);
   };
 
-  // load meals state data
-  useEffect(() => {
+  const refreshData = () => {
     getMeals()
       .then((data) => setData(data))
       .catch((error) => console.error(error));
-    // .finally(() => setLoading(false));
+  };
+
+  const formatTs = (ts: number) => {
+    const currentDate = new Date();
+    const tsDate = new Date(ts);
+    const diffDays = Math.round(
+      (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
+    );
+
+    if (diffDays < 1) {
+      return "Today";
+    } else if (diffDays < 7) {
+      return `${diffDays} day(s) ago`;
+    } else {
+      const diffWeeks = diffDays / 7;
+      if (diffWeeks < 4) {
+        return `${diffWeeks} week(s) ago`;
+      } else {
+        const diffMonths = diffWeeks / 4;
+        return `${diffMonths} month(s) ago`;
+      }
+    }
+  };
+
+  // load meals state data
+  useEffect(() => {
+    refreshData();
   }, []);
 
   return (
@@ -128,7 +150,9 @@ const App = () => {
               <Text style={styles.rowTitle}>{item.name}</Text>
             </View>
             <View style={styles.rowLabelCol}>
-              <Text style={styles.rowLabel}>{item.last_eaten_ts}</Text>
+              <Text style={styles.rowLabel}>
+                {formatTs(item.last_eaten_ts)}
+              </Text>
             </View>
           </View>
         )}
