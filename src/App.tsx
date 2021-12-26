@@ -75,8 +75,6 @@ export const formatTs = (ts: number) => {
     (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
   );
 
-  console.log(diffDays);
-
   if (diffDays < 1) {
     return "Today";
   } else if (diffDays < 7) {
