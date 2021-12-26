@@ -92,24 +92,42 @@ export const formatTs = (ts: number) => {
 
 const App = () => {
   const [data, setData] = useState<Meal[]>([]);
-  const [visible, setVisible] = useState(false);
+  const [newMealDialogVisible, setNewMealDialogVisible] = useState(false);
+  const [existingMealDialogVisible, setExistingMealDialogVisible] =
+    useState(false);
   const [newMeal, setNewMeal] = useState("");
+  const [existingMeal, setExistingMeal] = useState("");
 
   const showAddMealDialog = () => {
-    setVisible(true);
+    setNewMealDialogVisible(true);
+  };
+
+  const showExistingMealDialog = (meal: Meal) => {
+    setExistingMeal(meal.name);
+    setExistingMealDialogVisible(true);
   };
 
   const handleAddMeal = async () => {
     await addMeal(newMeal);
     console.log(`Added new meal: ${newMeal}`);
-    setVisible(false);
+    setNewMealDialogVisible(false);
+
+    // refresh meals state data
+    refreshData();
+  };
+
+  const handleExistingMeal = async () => {
+    await addMeal(existingMeal);
+    console.log(`Added existing meal: ${existingMeal}`);
+    setExistingMealDialogVisible(false);
 
     // refresh meals state data
     refreshData();
   };
 
   const handleCancel = () => {
-    setVisible(false);
+    setNewMealDialogVisible(false);
+    setExistingMealDialogVisible(false);
   };
 
   const refreshData = () => {
@@ -132,7 +150,7 @@ const App = () => {
         <View style={styles.buttonContainer}>
           <Pressable onPress={showAddMealDialog}>
             <Text style={styles.buttonText}>add meal</Text>
-            <Dialog.Container visible={visible}>
+            <Dialog.Container visible={newMealDialogVisible}>
               <Dialog.Title>New meal!</Dialog.Title>
               <Dialog.Description>Enter your meal</Dialog.Description>
               <Dialog.Input
@@ -149,16 +167,26 @@ const App = () => {
         ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
         data={data}
         renderItem={({ item }) => (
-          <View style={styles.row}>
-            <View style={styles.rowTitleCol}>
-              <Text style={styles.rowTitle}>{item.name}</Text>
+          <Pressable onPress={() => showExistingMealDialog(item)}>
+            <View style={styles.row}>
+              <View style={styles.rowTitleCol}>
+                <Text style={styles.rowTitle}>{item.name}</Text>
+              </View>
+              <View style={styles.rowLabelCol}>
+                <Text style={styles.rowLabel}>
+                  {formatTs(item.last_eaten_ts)}
+                </Text>
+              </View>
             </View>
-            <View style={styles.rowLabelCol}>
-              <Text style={styles.rowLabel}>
-                {formatTs(item.last_eaten_ts)}
-              </Text>
-            </View>
-          </View>
+            <Dialog.Container visible={existingMealDialogVisible}>
+              <Dialog.Title>Repeat...</Dialog.Title>
+              <Dialog.Description>
+                Eating {existingMeal} again?
+              </Dialog.Description>
+              <Dialog.Button label="Cancel" onPress={handleCancel} />
+              <Dialog.Button label="Eat!" onPress={handleExistingMeal} />
+            </Dialog.Container>
+          </Pressable>
         )}
       />
     </SafeAreaView>
