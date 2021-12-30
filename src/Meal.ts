@@ -1,12 +1,12 @@
 class Meal {
   name: string;
-  last_eaten_ts: number;
-  eaten_count: number;
+  lastEatenTs: number;
+  eatenCount: number;
 
-  constructor(name: string, last_eaten_ts: number, eaten_count: number) {
+  constructor(name: string, lastEatenTs: number, eatenCount: number) {
     this.name = name;
-    this.last_eaten_ts = last_eaten_ts;
-    this.eaten_count = eaten_count;
+    this.lastEatenTs = lastEatenTs;
+    this.eatenCount = eatenCount;
   }
 }
 

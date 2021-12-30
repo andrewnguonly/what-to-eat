@@ -15,9 +15,9 @@ it("get meals", async () => {
 
   AsyncStorageMock.multiGet = jest.fn(() => {
     return Promise.resolve([
-      ["burger", '{"name":"burger","last_eaten_ts":1,"eaten_count":1}'],
-      ["pizza", '{"name":"pizza","last_eaten_ts":0,"eaten_count":1}'],
-      ["salad", '{"name":"salad","last_eaten_ts":2,"eaten_count":1}'],
+      ["burger", '{"name":"burger","lastEatenTs":1,"eatenCount":1}'],
+      ["pizza", '{"name":"pizza","lastEatenTs":0,"eatenCount":1}'],
+      ["salad", '{"name":"salad","lastEatenTs":2,"eatenCount":1}'],
     ]);
   });
 
@@ -38,7 +38,7 @@ it("get meal by name, meal found", async () => {
 
   AsyncStorageMock.getItem = jest.fn(() => {
     return Promise.resolve(
-      `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":1}`
+      `{"name":"${mealName}","lastEatenTs":0,"eatenCount":1}`
     );
   });
 
@@ -74,7 +74,7 @@ it("add meal, new meal", async () => {
     return Promise.resolve(null);
   });
 
-  const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":1}`;
+  const mealJson = `{"name":"${mealName}","lastEatenTs":0,"eatenCount":1}`;
 
   await Controller.addMeal(mealName);
   expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);
@@ -95,11 +95,11 @@ it("add meal, existing meal", async () => {
   //   .mockImplementation(() => Promise.resolve(new Meal(mealName, 0, 5)));
   AsyncStorageMock.getItem = jest.fn(() => {
     return Promise.resolve(
-      `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":5}`
+      `{"name":"${mealName}","lastEatenTs":0,"eatenCount":5}`
     );
   });
 
-  const mealJson = `{"name":"${mealName}","last_eaten_ts":0,"eaten_count":6}`;
+  const mealJson = `{"name":"${mealName}","lastEatenTs":0,"eatenCount":6}`;
 
   await Controller.addMeal(mealName);
   expect(AsyncStorageMock.setItem).toBeCalledWith(mealName, mealJson);

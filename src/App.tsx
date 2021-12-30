@@ -139,11 +139,11 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
 
 const MealItem = ({
   name,
-  last_eaten_ts,
+  lastEatenTs,
   refreshData,
 }: {
   name: string;
-  last_eaten_ts: number;
+  lastEatenTs: number;
   refreshData: RefreshDataFunction;
 }) => {
   const [existingMealDialogVisible, setExistingMealDialogVisible] =
@@ -175,7 +175,7 @@ const MealItem = ({
           <Text style={styles.rowTitle}>{name}</Text>
         </View>
         <View style={styles.rowLabelCol}>
-          <Text style={styles.rowLabel}>{formatTs(last_eaten_ts)}</Text>
+          <Text style={styles.rowLabel}>{formatTs(lastEatenTs)}</Text>
         </View>
       </View>
       <Dialog.Container visible={existingMealDialogVisible}>
@@ -211,7 +211,7 @@ const App = () => {
         renderItem={({ item }) => (
           <MealItem
             name={item.name}
-            last_eaten_ts={item.last_eaten_ts}
+            lastEatenTs={item.lastEatenTs}
             refreshData={refreshData}
           />
         )}

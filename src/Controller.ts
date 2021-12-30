@@ -25,15 +25,15 @@ export const getMeals = async () => {
     .map((value) => {
       if (value != null) {
         const obj = JSON.parse(value);
-        return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+        return new Meal(obj["name"], obj["lastEatenTs"], obj["eatenCount"]);
       } else {
         return new Meal("null", 0, 0);
       }
     })
     .sort((meal1, meal2) => {
-      // Sort meals in ascending order by last_eaten_ts.
+      // Sort meals in ascending order by lastEatenTs.
       // Older meals appear first.
-      return meal1.last_eaten_ts - meal2.last_eaten_ts;
+      return meal1.lastEatenTs - meal2.lastEatenTs;
     });
 };
 
@@ -42,7 +42,7 @@ export const getMealByName = async (name: string) => {
     const value = await AsyncStorage.getItem(name);
     if (value !== null) {
       const obj = JSON.parse(value);
-      return new Meal(obj["name"], obj["last_eaten_ts"], obj["eaten_count"]);
+      return new Meal(obj["name"], obj["lastEatenTs"], obj["eatenCount"]);
     } else {
       return null;
     }
@@ -52,16 +52,16 @@ export const getMealByName = async (name: string) => {
 };
 
 export const addMeal = async (name: string) => {
-  let eaten_count = 1;
+  let eatenCount = 1;
   const meal = await getMealByName(name);
 
   if (meal != null) {
     console.log("Existing meal found.");
-    eaten_count += meal.eaten_count;
+    eatenCount += meal.eatenCount;
   }
 
   try {
-    const jsonValue = JSON.stringify(new Meal(name, Date.now(), eaten_count));
+    const jsonValue = JSON.stringify(new Meal(name, Date.now(), eatenCount));
     await AsyncStorage.setItem(name, jsonValue);
   } catch (e) {
     // save error
