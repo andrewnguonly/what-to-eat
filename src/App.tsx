@@ -162,26 +162,22 @@ const MealItem = ({
 }) => {
   const [existingMealDialogVisible, setExistingMealDialogVisible] =
     useState(false);
-  const [existingMeal, setExistingMeal] = useState("");
 
   const showExistingMealDialog = (mealName: string) => {
-    setExistingMeal(mealName);
     setExistingMealDialogVisible(true);
   };
 
   const handleExistingMeal = async () => {
-    await addMeal(existingMeal);
-    console.log(`Added existing meal: ${existingMeal}`);
+    await addMeal(name);
+    console.log(`Added existing meal: ${name}`);
     setExistingMealDialogVisible(false);
-
     // refresh meals state data
     refreshData();
   };
 
   const handleDeleteMeal = async () => {
-    await deleteMealByName(existingMeal);
-    console.log(`Deleted existing meal: ${existingMeal}`);
-
+    await deleteMealByName(name);
+    console.log(`Deleted existing meal: ${name}`);
     // refresh meals state data
     refreshData();
   };
@@ -198,11 +194,6 @@ const MealItem = ({
     );
   };
 
-  // load current meal into state
-  useEffect(() => {
-    setExistingMeal(name);
-  }, []);
-
   return (
     <Swipeable renderRightActions={swipeRight} rightThreshold={-200}>
       <Pressable onPress={() => showExistingMealDialog(name)}>
@@ -216,7 +207,7 @@ const MealItem = ({
         </View>
         <Dialog.Container visible={existingMealDialogVisible}>
           <Dialog.Title>Repeat...</Dialog.Title>
-          <Dialog.Description>Eating {existingMeal} again?</Dialog.Description>
+          <Dialog.Description>Eating {name} again?</Dialog.Description>
           <Dialog.Button label="Cancel" onPress={handleCancel} />
           <Dialog.Button label="Eat!" onPress={handleExistingMeal} />
         </Dialog.Container>
