@@ -8,7 +8,11 @@ import {
   View,
 } from "react-native";
 import Dialog from "react-native-dialog";
-import { addMeal, getMeals } from "./Controller";
+import {
+  GestureHandlerRootView,
+  Swipeable,
+} from "react-native-gesture-handler";
+import { addMeal, deleteMealByName, getMeals } from "./Controller";
 import Meal from "./Meal";
 
 const styles = StyleSheet.create({
@@ -61,6 +65,16 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: "flex-start",
     width: "50%",
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    width: "25%",
+  },
+  deleteButtonText: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "center",
   },
 });
 
@@ -164,27 +178,50 @@ const MealItem = ({
     refreshData();
   };
 
+  const handleDeleteMeal = async () => {
+    await deleteMealByName(existingMeal);
+    console.log(`Deleted existing meal: ${existingMeal}`);
+
+    // refresh meals state data
+    refreshData();
+  };
+
   const handleCancel = () => {
     setExistingMealDialogVisible(false);
   };
 
+  const swipeRight = () => {
+    return (
+      <Pressable style={styles.deleteButton} onPress={handleDeleteMeal}>
+        <Text style={styles.deleteButtonText}>delete</Text>
+      </Pressable>
+    );
+  };
+
+  // load current meal into state
+  useEffect(() => {
+    setExistingMeal(name);
+  }, []);
+
   return (
-    <Pressable onPress={() => showExistingMealDialog(name)}>
-      <View style={styles.row}>
-        <View style={styles.rowTitleCol}>
-          <Text style={styles.rowTitle}>{name}</Text>
+    <Swipeable renderRightActions={swipeRight} rightThreshold={-200}>
+      <Pressable onPress={() => showExistingMealDialog(name)}>
+        <View style={styles.row}>
+          <View style={styles.rowTitleCol}>
+            <Text style={styles.rowTitle}>{name}</Text>
+          </View>
+          <View style={styles.rowLabelCol}>
+            <Text style={styles.rowLabel}>{formatTs(lastEatenTs)}</Text>
+          </View>
         </View>
-        <View style={styles.rowLabelCol}>
-          <Text style={styles.rowLabel}>{formatTs(lastEatenTs)}</Text>
-        </View>
-      </View>
-      <Dialog.Container visible={existingMealDialogVisible}>
-        <Dialog.Title>Repeat...</Dialog.Title>
-        <Dialog.Description>Eating {existingMeal} again?</Dialog.Description>
-        <Dialog.Button label="Cancel" onPress={handleCancel} />
-        <Dialog.Button label="Eat!" onPress={handleExistingMeal} />
-      </Dialog.Container>
-    </Pressable>
+        <Dialog.Container visible={existingMealDialogVisible}>
+          <Dialog.Title>Repeat...</Dialog.Title>
+          <Dialog.Description>Eating {existingMeal} again?</Dialog.Description>
+          <Dialog.Button label="Cancel" onPress={handleCancel} />
+          <Dialog.Button label="Eat!" onPress={handleExistingMeal} />
+        </Dialog.Container>
+      </Pressable>
+    </Swipeable>
   );
 };
 
@@ -204,18 +241,20 @@ const App = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TitleBar refreshData={refreshData} />
-      <FlatList
-        ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
-        data={data}
-        renderItem={({ item }) => (
-          <MealItem
-            name={item.name}
-            lastEatenTs={item.lastEatenTs}
-            refreshData={refreshData}
-          />
-        )}
-      />
+      <GestureHandlerRootView>
+        <TitleBar refreshData={refreshData} />
+        <FlatList
+          ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
+          data={data}
+          renderItem={({ item }) => (
+            <MealItem
+              name={item.name}
+              lastEatenTs={item.lastEatenTs}
+              refreshData={refreshData}
+            />
+          )}
+        />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 };
