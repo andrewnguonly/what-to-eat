@@ -155,15 +155,17 @@ const MealItem = ({
   name,
   lastEatenTs,
   refreshData,
+  mealItemRefs,
 }: {
   name: string;
   lastEatenTs: number;
   refreshData: RefreshDataFunction;
+  mealItemRefs: Map<string, Swipeable>;
 }) => {
   const [existingMealDialogVisible, setExistingMealDialogVisible] =
     useState(false);
 
-  const showExistingMealDialog = (mealName: string) => {
+  const showExistingMealDialog = () => {
     setExistingMealDialogVisible(true);
   };
 
@@ -195,8 +197,22 @@ const MealItem = ({
   };
 
   return (
-    <Swipeable renderRightActions={swipeRight} rightThreshold={-200} key={name}>
-      <Pressable onPress={() => showExistingMealDialog(name)}>
+    <Swipeable
+      renderRightActions={swipeRight}
+      rightThreshold={-200}
+      key={name}
+      ref={(ref) => {
+        if (ref && !mealItemRefs.get(name)) {
+          mealItemRefs.set(name, ref);
+        }
+      }}
+      onSwipeableWillOpen={() => {
+        [...mealItemRefs.entries()].forEach(([key, ref]) => {
+          if (key !== name && ref) ref.close();
+        });
+      }}
+    >
+      <Pressable onPress={showExistingMealDialog}>
         <View style={styles.row}>
           <View style={styles.rowTitleCol}>
             <Text style={styles.rowTitle}>{name}</Text>
@@ -217,6 +233,7 @@ const MealItem = ({
 };
 
 const App = () => {
+  const mealItemRefs = new Map<string, Swipeable>();
   const [data, setData] = useState<Meal[]>([]);
 
   const refreshData = () => {
@@ -242,6 +259,7 @@ const App = () => {
               name={item.name}
               lastEatenTs={item.lastEatenTs}
               refreshData={refreshData}
+              mealItemRefs={mealItemRefs}
             />
           )}
         />
