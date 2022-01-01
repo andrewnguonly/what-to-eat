@@ -195,7 +195,7 @@ const MealItem = ({
   };
 
   return (
-    <Swipeable renderRightActions={swipeRight} rightThreshold={-200}>
+    <Swipeable renderRightActions={swipeRight} rightThreshold={-200} key={name}>
       <Pressable onPress={() => showExistingMealDialog(name)}>
         <View style={styles.row}>
           <View style={styles.rowTitleCol}>
