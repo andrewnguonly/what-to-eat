@@ -167,6 +167,10 @@ const MealItem = ({
 
   const showExistingMealDialog = () => {
     setExistingMealDialogVisible(true);
+    [...mealItemRefs.entries()].forEach(([, ref]) => {
+      // close all swipe menus
+      ref.close();
+    });
   };
 
   const handleExistingMeal = async () => {
