@@ -60,5 +60,6 @@ Run app in emulator.
 
 ```
 npx react-native run-ios
+npx react-native run-ios --configuration Release
 npx react-native run-android
 ```
