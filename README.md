@@ -60,6 +60,30 @@ Run app in emulator.
 
 ```
 npx react-native run-ios
-npx react-native run-ios --configuration Release
 npx react-native run-android
+```
+
+## Build
+
+### iOS
+
+Build release version.
+
+```
+npx react-native run-ios --configuration Release
+```
+
+### Android
+
+Build release version.
+
+```
+npx react-native run-android --variant=release
+```
+
+Generate release Android App Bundle.
+
+```
+cd android
+./gradlew bundleRelease
 ```
