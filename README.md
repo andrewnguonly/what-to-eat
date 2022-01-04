@@ -65,6 +65,12 @@ npx react-native run-android
 
 ## Build
 
+### Update Build Version
+1. Update app version. Example: 0.0.1 --> 0.0.2
+2. Update build number. Example: 1 --> 2
+3. `git tag -a v0.0.2 -m "<message>"`
+4. `git push --tags`
+
 ### iOS
 
 Build release version.
