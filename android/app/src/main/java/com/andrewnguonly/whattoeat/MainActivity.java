@@ -1,4 +1,4 @@
-package com.whattoeat;
+package com.andrewnguonly.whattoeat;
 
 import com.facebook.react.ReactActivity;
 
