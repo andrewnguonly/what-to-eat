@@ -253,7 +253,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <TitleBar refreshData={refreshData} />
         <FlatList
           ItemSeparatorComponent={() => <View style={styles.rowSeparator} />}
