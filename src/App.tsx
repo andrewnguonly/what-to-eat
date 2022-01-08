@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  AppState,
   FlatList,
   Pressable,
   SafeAreaView,
@@ -239,6 +240,7 @@ const MealItem = ({
 };
 
 const App = () => {
+  const appState = useRef(AppState.currentState);
   const mealItemRefs = new Map<string, Swipeable>();
   const [data, setData] = useState<Meal[]>([]);
 
@@ -250,7 +252,23 @@ const App = () => {
 
   // load meals state data
   useEffect(() => {
+    // refresh state data when app is started for the first time
     refreshData();
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        // refresh state data when app comes to the foreground
+        refreshData();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (
