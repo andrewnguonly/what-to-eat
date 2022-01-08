@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   row: {
     alignItems: "center",
+    backgroundColor: "white",
     flexDirection: "row",
     height: 50,
     paddingHorizontal: "5%",
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
   },
   rowTitle: {
+    color: "black",
     fontSize: 20,
   },
   rowTitleCol: {
