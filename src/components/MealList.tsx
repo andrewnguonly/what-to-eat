@@ -4,14 +4,7 @@ import { Swipeable } from "react-native-gesture-handler";
 import { RefreshDataFunction } from "../App";
 import Meal from "../Meal";
 import MealListItem from "./MealListItem";
-
-const styles = StyleSheet.create({
-  rowSeparator: {
-    backgroundColor: "lightgray",
-    height: 1,
-    marginLeft: "5%",
-  },
-});
+import { useTheme } from "../theme/ThemeProvider";
 
 const MealList = ({
   data,
@@ -20,6 +13,16 @@ const MealList = ({
   data: Meal[];
   refreshData: RefreshDataFunction;
 }) => {
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    rowSeparator: {
+      backgroundColor: theme.secondaryTextColor,
+      height: 1,
+      marginLeft: "5%",
+    },
+  });
+
   const mealItemRefs = new Map<string, Swipeable>();
 
   return (

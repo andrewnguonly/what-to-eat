@@ -3,35 +3,38 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { RefreshDataFunction } from "../App";
 import { addMeal } from "../Controller";
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    alignItems: "flex-end",
-    width: "50%",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 20,
-  },
-  title: {
-    color: "white",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  titleBar: {
-    alignItems: "center",
-    backgroundColor: "#32CD32",
-    flexDirection: "row",
-    height: 50,
-    paddingHorizontal: "5%",
-  },
-  titleContainer: {
-    alignItems: "flex-start",
-    width: "50%",
-  },
-});
+import { useTheme } from "../theme/ThemeProvider";
 
 const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    buttonContainer: {
+      alignItems: "flex-end",
+      width: "50%",
+    },
+    buttonText: {
+      color: "white",
+      fontSize: 20,
+    },
+    title: {
+      color: "white",
+      fontSize: 20,
+      fontWeight: "bold",
+    },
+    titleBar: {
+      alignItems: "center",
+      backgroundColor: theme.primaryColor,
+      flexDirection: "row",
+      height: 50,
+      paddingHorizontal: "5%",
+    },
+    titleContainer: {
+      alignItems: "flex-start",
+      width: "50%",
+    },
+  });
+
   const [newMealDialogVisible, setNewMealDialogVisible] = useState(false);
   const [newMeal, setNewMeal] = useState("");
 

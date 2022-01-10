@@ -5,6 +5,7 @@ import { getMeals } from "./Controller";
 import Meal from "./Meal";
 import TitleBar from "./components/TitleBar";
 import MealList from "./components/MealList";
+import { ThemeProvider } from "./theme/ThemeProvider";
 
 export type RefreshDataFunction = () => void;
 
@@ -42,8 +43,10 @@ const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <TitleBar refreshData={refreshData} />
-        <MealList data={data} refreshData={refreshData} />
+        <ThemeProvider>
+          <TitleBar refreshData={refreshData} />
+          <MealList data={data} refreshData={refreshData} />
+        </ThemeProvider>
       </GestureHandlerRootView>
     </SafeAreaView>
   );

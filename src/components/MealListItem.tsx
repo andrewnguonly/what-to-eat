@@ -4,42 +4,7 @@ import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
 import { RefreshDataFunction } from "../App";
 import { addMeal, deleteMealByName } from "../Controller";
-
-const styles = StyleSheet.create({
-  row: {
-    alignItems: "center",
-    backgroundColor: "white",
-    flexDirection: "row",
-    height: 50,
-    paddingHorizontal: "5%",
-  },
-  rowLabel: {
-    color: "gray",
-    fontSize: 20,
-  },
-  rowLabelCol: {
-    alignItems: "flex-end",
-    width: "50%",
-  },
-  rowTitle: {
-    color: "black",
-    fontSize: 20,
-  },
-  rowTitleCol: {
-    alignItems: "flex-start",
-    width: "50%",
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    justifyContent: "center",
-    width: "25%",
-  },
-  deleteButtonText: {
-    color: "white",
-    fontSize: 20,
-    textAlign: "center",
-  },
-});
+import { useTheme } from "../theme/ThemeProvider";
 
 /**
  * This function assumes 1 month = 28 days.
@@ -78,6 +43,44 @@ const MealListItem = ({
   refreshData: RefreshDataFunction;
   mealItemRefs: Map<string, Swipeable>;
 }) => {
+  const { theme } = useTheme();
+
+  const styles = StyleSheet.create({
+    row: {
+      alignItems: "center",
+      backgroundColor: theme.secondaryColor,
+      flexDirection: "row",
+      height: 50,
+      paddingHorizontal: "5%",
+    },
+    rowLabel: {
+      color: theme.secondaryTextColor,
+      fontSize: 20,
+    },
+    rowLabelCol: {
+      alignItems: "flex-end",
+      width: "50%",
+    },
+    rowTitle: {
+      color: theme.primaryTextColor,
+      fontSize: 20,
+    },
+    rowTitleCol: {
+      alignItems: "flex-start",
+      width: "50%",
+    },
+    deleteButton: {
+      backgroundColor: "red",
+      justifyContent: "center",
+      width: "25%",
+    },
+    deleteButtonText: {
+      color: "white",
+      fontSize: 20,
+      textAlign: "center",
+    },
+  });
+
   const [existingMealDialogVisible, setExistingMealDialogVisible] =
     useState(false);
 
