@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Dialog from "react-native-dialog";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { RefreshDataFunction } from "../App";
 import { addMeal } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
@@ -9,29 +11,33 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
   const { theme } = useTheme();
 
   const styles = StyleSheet.create({
-    buttonContainer: {
-      alignItems: "flex-end",
-      width: "50%",
+    appIcon: {
+      height: 50,
+      width: 50,
     },
     buttonText: {
       color: "white",
       fontSize: 20,
     },
-    title: {
-      color: "white",
-      fontSize: 20,
-      fontWeight: "bold",
+    leftButtonContainer: {
+      alignItems: "flex-start",
+      flex: 1,
+      paddingLeft: "5%",
+    },
+    rightButtonContainer: {
+      alignItems: "flex-end",
+      flex: 1,
+      paddingRight: "5%",
     },
     titleBar: {
       alignItems: "center",
       backgroundColor: theme.primaryColor,
       flexDirection: "row",
       height: 50,
-      paddingHorizontal: "5%",
     },
     titleContainer: {
-      alignItems: "flex-start",
-      width: "50%",
+      alignItems: "center",
+      flex: 1,
     },
   });
 
@@ -57,12 +63,16 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
 
   return (
     <View style={styles.titleBar}>
+      <View style={styles.leftButtonContainer} />
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>What to eat?</Text>
+        <Image
+          style={styles.appIcon}
+          source={require("../assets/app_icon_1024x1024_transparent.png")}
+        />
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={styles.rightButtonContainer}>
         <Pressable onPress={showAddMealDialog}>
-          <Text style={styles.buttonText}>add meal</Text>
+          <FontAwesomeIcon icon={faPlus} color={"white"} />
           <Dialog.Container visible={newMealDialogVisible}>
             <Dialog.Title>New meal!</Dialog.Title>
             <Dialog.Description>Enter your meal</Dialog.Description>
