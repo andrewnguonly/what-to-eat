@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { RefreshDataFunction } from "../App";
 import { addMeal, deleteMealByName } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
@@ -88,14 +88,10 @@ const MealListItem = ({
       justifyContent: "flex-start",
     },
     deleteButton: {
+      alignItems: "center",
       backgroundColor: "red",
       justifyContent: "center",
-      width: "25%",
-    },
-    deleteButtonText: {
-      color: "white",
-      fontSize: 16,
-      textAlign: "center",
+      width: "23%",
     },
   });
 
@@ -132,7 +128,7 @@ const MealListItem = ({
   const swipeRight = () => {
     return (
       <Pressable style={styles.deleteButton} onPress={handleDeleteMeal}>
-        <Text style={styles.deleteButtonText}>delete</Text>
+        <FontAwesomeIcon icon={faTrashAlt} color={"white"} size={18} />
       </Pressable>
     );
   };

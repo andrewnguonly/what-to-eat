@@ -72,7 +72,7 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
       </View>
       <View style={styles.rightButtonContainer}>
         <Pressable onPress={showAddMealDialog}>
-          <FontAwesomeIcon icon={faPlus} color={"white"} />
+          <FontAwesomeIcon icon={faPlus} color={"white"} size={18} />
           <Dialog.Container visible={newMealDialogVisible}>
             <Dialog.Title>New meal!</Dialog.Title>
             <Dialog.Description>Enter your meal</Dialog.Description>
