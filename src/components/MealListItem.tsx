@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { RefreshDataFunction } from "../App";
 import { addMeal, deleteMealByName } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
@@ -18,28 +20,38 @@ export const formatTs = (ts: number) => {
   );
 
   if (diffDays < 1) {
-    return "Today";
+    return "today";
   } else if (diffDays < 7) {
-    return `${diffDays} day(s) ago`;
+    return `${diffDays}d`;
   } else {
     const diffWeeks = Math.floor(diffDays / 7);
     if (diffWeeks < 4) {
-      return `${diffWeeks} week(s) ago`;
+      return `${diffWeeks}w`;
     } else {
       const diffMonths = Math.floor(diffWeeks / 4);
-      return `${diffMonths} month(s) ago`;
+      return `${diffMonths}mo`;
     }
+  }
+};
+
+export const formatEatenCount = (eatenCount: number) => {
+  if (eatenCount > 1) {
+    return ` (${eatenCount})`;
+  } else {
+    return "";
   }
 };
 
 const MealListItem = ({
   name,
   lastEatenTs,
+  eatenCount,
   refreshData,
   mealItemRefs,
 }: {
   name: string;
   lastEatenTs: number;
+  eatenCount: number;
   refreshData: RefreshDataFunction;
   mealItemRefs: Map<string, Swipeable>;
 }) => {
@@ -55,19 +67,25 @@ const MealListItem = ({
     },
     rowLabel: {
       color: theme.secondaryTextColor,
-      fontSize: 20,
+      fontSize: 16,
     },
-    rowLabelCol: {
-      alignItems: "flex-end",
-      width: "50%",
+    rowLabelContainer: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: "flex-end",
+    },
+    rowSubtitle: {
+      color: theme.secondaryTextColor,
+      fontSize: 16,
     },
     rowTitle: {
       color: theme.primaryTextColor,
-      fontSize: 20,
+      fontSize: 16,
     },
-    rowTitleCol: {
-      alignItems: "flex-start",
-      width: "50%",
+    rowTitleContainer: {
+      flex: 4,
+      flexDirection: "row",
+      justifyContent: "flex-start",
     },
     deleteButton: {
       backgroundColor: "red",
@@ -76,7 +94,7 @@ const MealListItem = ({
     },
     deleteButtonText: {
       color: "white",
-      fontSize: 20,
+      fontSize: 16,
       textAlign: "center",
     },
   });
@@ -137,11 +155,19 @@ const MealListItem = ({
     >
       <Pressable onPress={showExistingMealDialog}>
         <View style={styles.row}>
-          <View style={styles.rowTitleCol}>
+          <View style={styles.rowTitleContainer}>
             <Text style={styles.rowTitle}>{name}</Text>
+            <Text style={styles.rowSubtitle}>
+              {formatEatenCount(eatenCount)}
+            </Text>
           </View>
-          <View style={styles.rowLabelCol}>
-            <Text style={styles.rowLabel}>{formatTs(lastEatenTs)}</Text>
+          <View style={styles.rowLabelContainer}>
+            <FontAwesomeIcon
+              icon={faClock}
+              color={theme.secondaryTextColor}
+              size={18}
+            />
+            <Text style={styles.rowLabel}> {formatTs(lastEatenTs)}</Text>
           </View>
         </View>
         <Dialog.Container visible={existingMealDialogVisible}>

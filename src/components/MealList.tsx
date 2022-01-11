@@ -33,6 +33,7 @@ const MealList = ({
         <MealListItem
           name={item.name}
           lastEatenTs={item.lastEatenTs}
+          eatenCount={item.eatenCount}
           refreshData={refreshData}
           mealItemRefs={mealItemRefs}
         />
