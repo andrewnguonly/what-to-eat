@@ -15,12 +15,17 @@ export const formatTs = (ts: number) => {
   const currentDate = new Date();
   const tsDate = new Date(ts);
 
-  const diffDays = Math.ceil(
+  const diffDays = Math.floor(
     (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
   );
 
   if (diffDays < 1) {
-    return "today";
+    if (currentDate.getDate() == tsDate.getDate()) {
+      return "today";
+    } else {
+      // corner case: not a full 1 day, but still yesterday
+      return "1d";
+    }
   } else if (diffDays < 7) {
     return `${diffDays}d`;
   } else {
