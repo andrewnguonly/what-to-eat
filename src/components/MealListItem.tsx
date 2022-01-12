@@ -83,7 +83,7 @@ const MealListItem = ({
       fontSize: 16,
     },
     rowTitleContainer: {
-      flex: 4,
+      flex: 2,
       flexDirection: "row",
       justifyContent: "flex-start",
     },
@@ -152,7 +152,9 @@ const MealListItem = ({
       <Pressable onPress={showExistingMealDialog}>
         <View style={styles.row}>
           <View style={styles.rowTitleContainer}>
-            <Text style={styles.rowTitle}>{name}</Text>
+            <Text style={styles.rowTitle} numberOfLines={1}>
+              {name}
+            </Text>
             <Text style={styles.rowSubtitle}>
               {formatEatenCount(eatenCount)}
             </Text>
