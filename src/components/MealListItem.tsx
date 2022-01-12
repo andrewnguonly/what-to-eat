@@ -15,7 +15,7 @@ export const formatTs = (ts: number) => {
   const currentDate = new Date();
   const tsDate = new Date(ts);
 
-  const diffDays = Math.floor(
+  const diffDays = Math.ceil(
     (currentDate.getTime() - tsDate.getTime()) / (1000 * 3600 * 24)
   );
 
