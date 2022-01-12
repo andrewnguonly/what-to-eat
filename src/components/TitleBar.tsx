@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -49,9 +49,14 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
   };
 
   const handleAddMeal = async () => {
+    if (newMeal == "") {
+      Alert.alert("Empty meal?", "Don't kid yourself...");
+      return;
+    }
     await addMeal(newMeal);
     console.log(`Added new meal: ${newMeal}`);
     setNewMealDialogVisible(false);
+    setNewMeal("");
 
     // refresh meals state data
     refreshData();
