@@ -3,7 +3,7 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   transform: {},
   transformIgnorePatterns: [
-    "node_modules/(?!(@react-native|react-native|react-native-dialog)/)",
+    "node_modules/(?!(@react-native|react-native|react-native-dialog|@fortawesome)/)",
   ],
   setupFiles: ["./node_modules/react-native-gesture-handler/jestSetup.js"],
 };

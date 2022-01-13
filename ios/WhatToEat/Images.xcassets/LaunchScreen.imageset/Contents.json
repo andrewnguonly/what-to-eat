@@ -1,15 +1,17 @@
 {
   "images": [
     {
-      "filename": "app_icon_120x120.png",
+      "filename": "launchscreen_background_no_alpha.png",
       "idiom": "universal",
       "scale": "1x"
     },
     {
+      "filename": "launchscreen_background_no_alpha@2x.png",
       "idiom": "universal",
       "scale": "2x"
     },
     {
+      "filename": "launchscreen_background_no_alpha@3x.png",
       "idiom": "universal",
       "scale": "3x"
     }
