@@ -115,3 +115,22 @@ it("delete meal by name", async () => {
   await Controller.deleteMealByName(mealName);
   expect(AsyncStorageMock.removeItem).toBeCalledWith(mealName);
 });
+
+it("edit meal name", async () => {
+  const mealName = "pizza";
+  const newMealName = "veggie pizza";
+
+  AsyncStorageMock.getItem = jest.fn(() => {
+    return Promise.resolve(
+      `{"name":"${mealName}","lastEatenTs":0,"eatenCount":5}`
+    );
+  });
+
+  await Controller.editMealName(mealName, newMealName);
+
+  expect(AsyncStorageMock.setItem).toBeCalledWith(
+    newMealName,
+    `{"name":"${newMealName}","lastEatenTs":0,"eatenCount":5}`
+  );
+  expect(AsyncStorageMock.removeItem).toBeCalledWith(mealName);
+});

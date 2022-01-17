@@ -16,7 +16,6 @@ export const getMeals = async () => {
   } catch (e) {
     // read error
   }
-  console.log(`Got pairs: ${pairs}`);
 
   const values = pairs.map((pair) => pair[1]);
   console.log(`Got values: ${values}`);
@@ -85,4 +84,21 @@ export const deleteMealByName = async (name: string) => {
   }
 
   console.log(`Deleted meal: ${name}.`);
+};
+
+export const editMealName = async (name: string, newName: string) => {
+  try {
+    const meal = await getMealByName(name);
+    if (meal != null) {
+      // replace meal name
+      meal.name = newName;
+      // add new key
+      const jsonValue = JSON.stringify(meal);
+      await AsyncStorage.setItem(newName, jsonValue);
+      // delete old key
+      await deleteMealByName(name);
+    }
+  } catch (e) {
+    // do nothing
+  }
 };
