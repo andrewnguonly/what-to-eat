@@ -45,6 +45,10 @@ jobs:
 
       - name: Lint source files
         run: |
+          yarn lint
+
+      - name: Compile source files
+        run: |
           yarn tsc
 
   test:
