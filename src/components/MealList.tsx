@@ -38,6 +38,7 @@ const MealList = ({
           mealItemRefs={mealItemRefs}
         />
       )}
+      keyboardShouldPersistTaps="handled"
     />
   );
 };
