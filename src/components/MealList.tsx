@@ -34,10 +34,12 @@ const MealList = ({
           name={item.name}
           lastEatenTs={item.lastEatenTs}
           eatenCount={item.eatenCount}
+          deferred={item.deferred}
           refreshData={refreshData}
           mealItemRefs={mealItemRefs}
         />
       )}
+      keyboardShouldPersistTaps="handled"
     />
   );
 };

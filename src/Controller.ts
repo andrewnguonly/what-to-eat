@@ -16,7 +16,6 @@ export const getMeals = async () => {
   } catch (e) {
     // read error
   }
-  console.log(`Got pairs: ${pairs}`);
 
   const values = pairs.map((pair) => pair[1]);
   console.log(`Got values: ${values}`);
@@ -25,9 +24,14 @@ export const getMeals = async () => {
     .map((value) => {
       if (value != null) {
         const obj = JSON.parse(value);
-        return new Meal(obj["name"], obj["lastEatenTs"], obj["eatenCount"]);
+        return new Meal(
+          obj["name"],
+          obj["lastEatenTs"],
+          obj["eatenCount"],
+          obj["deferred"] || false
+        );
       } else {
-        return new Meal("null", 0, 0);
+        return new Meal("null", 0, 0, false);
       }
     })
     .sort((meal1, meal2) => {
@@ -42,7 +46,12 @@ export const getMealByName = async (name: string) => {
     const value = await AsyncStorage.getItem(name);
     if (value !== null) {
       const obj = JSON.parse(value);
-      return new Meal(obj["name"], obj["lastEatenTs"], obj["eatenCount"]);
+      return new Meal(
+        obj["name"],
+        obj["lastEatenTs"],
+        obj["eatenCount"],
+        obj["deferred"] || false
+      );
     } else {
       return null;
     }
@@ -61,7 +70,9 @@ export const addMeal = async (name: string) => {
   }
 
   try {
-    const jsonValue = JSON.stringify(new Meal(name, Date.now(), eatenCount));
+    const jsonValue = JSON.stringify(
+      new Meal(name, Date.now(), eatenCount, false)
+    );
     await AsyncStorage.setItem(name, jsonValue);
   } catch (e) {
     // save error
@@ -85,4 +96,35 @@ export const deleteMealByName = async (name: string) => {
   }
 
   console.log(`Deleted meal: ${name}.`);
+};
+
+export const editMealName = async (name: string, newName: string) => {
+  try {
+    const meal = await getMealByName(name);
+    if (meal != null) {
+      // replace meal name
+      meal.name = newName;
+      // add new key
+      const jsonValue = JSON.stringify(meal);
+      await AsyncStorage.setItem(newName, jsonValue);
+      // delete old key
+      await deleteMealByName(name);
+    }
+  } catch (e) {
+    // do nothing
+  }
+};
+
+export const deferMealByName = async (name: string) => {
+  try {
+    const meal = await getMealByName(name);
+    if (meal != null) {
+      meal.deferred = true;
+      meal.lastEatenTs = Date.now();
+      const jsonValue = JSON.stringify(meal);
+      await AsyncStorage.setItem(name, jsonValue);
+    }
+  } catch (e) {
+    // do nothing
+  }
 };

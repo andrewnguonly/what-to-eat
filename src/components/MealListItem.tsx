@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faClock, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faClock,
+  faEdit,
+  faRedo,
+  faTrashAlt,
+} from "@fortawesome/free-solid-svg-icons";
 import { RefreshDataFunction } from "../App";
-import { addMeal, deleteMealByName } from "../Controller";
+import {
+  addMeal,
+  editMealName,
+  deferMealByName,
+  deleteMealByName,
+} from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
 
 /**
@@ -51,12 +61,14 @@ const MealListItem = ({
   name,
   lastEatenTs,
   eatenCount,
+  deferred,
   refreshData,
   mealItemRefs,
 }: {
   name: string;
   lastEatenTs: number;
   eatenCount: number;
+  deferred: boolean;
   refreshData: RefreshDataFunction;
   mealItemRefs: Map<string, Swipeable>;
 }) => {
@@ -92,16 +104,35 @@ const MealListItem = ({
       flexDirection: "row",
       justifyContent: "flex-start",
     },
+    swipeRightMenuContainer: {
+      flexDirection: "row",
+      width: "45%",
+    },
+    editButton: {
+      alignItems: "center",
+      backgroundColor: "#FFC123",
+      flex: 1,
+      justifyContent: "center",
+    },
+    deferButton: {
+      alignItems: "center",
+      backgroundColor: "mediumorchid",
+      flex: 1,
+      justifyContent: "center",
+    },
     deleteButton: {
       alignItems: "center",
       backgroundColor: "red",
+      flex: 1,
       justifyContent: "center",
-      width: "23%",
     },
   });
 
+  const [newName, setNewMealName] = useState("");
   const [existingMealDialogVisible, setExistingMealDialogVisible] =
     useState(false);
+  const [editMealDialogVisible, setEditMealDialogVisible] = useState(false);
+  const [deferMealDialogVisible, setDeferMealDialogVisible] = useState(false);
 
   const showExistingMealDialog = () => {
     setExistingMealDialogVisible(true);
@@ -111,10 +142,43 @@ const MealListItem = ({
     });
   };
 
+  const showEditMealDialog = () => {
+    setEditMealDialogVisible(true);
+  };
+
+  const showDeferMealDialog = () => {
+    setDeferMealDialogVisible(true);
+  };
+
   const handleExistingMeal = async () => {
     await addMeal(name);
     console.log(`Added existing meal: ${name}`);
     setExistingMealDialogVisible(false);
+    // refresh meals state data
+    refreshData();
+  };
+
+  const handleEditMeal = async () => {
+    if (newName == "") {
+      Alert.alert("Empty meal?", "Don't kid yourself...");
+      return;
+    }
+    if (newName == name) {
+      Alert.alert("Same meal?", "Don't kid yourself...");
+      return;
+    }
+    await editMealName(name, newName);
+    console.log(`Update meal name: ${name} --> ${newName}`);
+    setEditMealDialogVisible(false);
+    setNewMealName("");
+    // refresh meals state data
+    refreshData();
+  };
+
+  const handleDeferMeal = async () => {
+    await deferMealByName(name);
+    console.log(`Deferred meal: ${name}`);
+    setDeferMealDialogVisible(false);
     // refresh meals state data
     refreshData();
   };
@@ -128,13 +192,24 @@ const MealListItem = ({
 
   const handleCancel = () => {
     setExistingMealDialogVisible(false);
+    setEditMealDialogVisible(false);
+    setDeferMealDialogVisible(false);
+    mealItemRefs.get(name)?.close();
   };
 
   const swipeRight = () => {
     return (
-      <Pressable style={styles.deleteButton} onPress={handleDeleteMeal}>
-        <FontAwesomeIcon icon={faTrashAlt} color={"white"} size={18} />
-      </Pressable>
+      <View style={styles.swipeRightMenuContainer}>
+        <Pressable style={styles.editButton} onPress={showEditMealDialog}>
+          <FontAwesomeIcon icon={faEdit} color={"white"} size={18} />
+        </Pressable>
+        <Pressable style={styles.deferButton} onPress={showDeferMealDialog}>
+          <FontAwesomeIcon icon={faRedo} color={"white"} size={18} />
+        </Pressable>
+        <Pressable style={styles.deleteButton} onPress={handleDeleteMeal}>
+          <FontAwesomeIcon icon={faTrashAlt} color={"white"} size={18} />
+        </Pressable>
+      </View>
     );
   };
 
@@ -166,7 +241,7 @@ const MealListItem = ({
           </View>
           <View style={styles.rowLabelContainer}>
             <FontAwesomeIcon
-              icon={faClock}
+              icon={deferred ? faRedo : faClock}
               color={theme.secondaryTextColor}
               size={18}
             />
@@ -178,6 +253,22 @@ const MealListItem = ({
           <Dialog.Description>Eating {name} again?</Dialog.Description>
           <Dialog.Button label="Cancel" onPress={handleCancel} />
           <Dialog.Button label="Eat!" onPress={handleExistingMeal} />
+        </Dialog.Container>
+        <Dialog.Container visible={editMealDialogVisible}>
+          <Dialog.Title>Edit meal</Dialog.Title>
+          <Dialog.Description>Update your meal name</Dialog.Description>
+          <Dialog.Input
+            placeholder={name}
+            onChangeText={(meal) => setNewMealName(meal)}
+          />
+          <Dialog.Button label="Cancel" onPress={handleCancel} />
+          <Dialog.Button label="Update" onPress={handleEditMeal} />
+        </Dialog.Container>
+        <Dialog.Container visible={deferMealDialogVisible}>
+          <Dialog.Title>Later?</Dialog.Title>
+          <Dialog.Description>Don't wanna eat {name} now?</Dialog.Description>
+          <Dialog.Button label="Cancel" onPress={handleCancel} />
+          <Dialog.Button label="Later" onPress={handleDeferMeal} />
         </Dialog.Container>
       </Pressable>
     </Swipeable>
