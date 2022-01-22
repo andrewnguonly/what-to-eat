@@ -7,10 +7,6 @@ import TitleBar from "./components/TitleBar";
 import MealList from "./components/MealList";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import NotificationService from "./notifications/NotificationService";
-import {
-  dinnerNotification,
-  lunchNotification,
-} from "./notifications/Notifications";
 
 export type RefreshDataFunction = () => void;
 
@@ -34,9 +30,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    // TODO: wait for fixes to react-native-push-notification
     // schedule notifications
-    notificationService.scheduleNotification(lunchNotification);
-    notificationService.scheduleNotification(dinnerNotification);
+    // notificationService.scheduleNotification(lunchNotification);
+    // notificationService.scheduleNotification(dinnerNotification);
 
     // refresh state data when app is started for the first time
     refreshData();

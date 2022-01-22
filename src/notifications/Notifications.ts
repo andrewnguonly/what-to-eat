@@ -18,6 +18,9 @@ export const lunchNotification: PushNotificationScheduleObject = {
   message: "Don't forget to log your breakfast/lunch!",
   repeatType: "day",
   number: 1,
+
+  // Android only
+  channelId: "default-channel-id",
 };
 
 export const dinnerNotification: PushNotificationScheduleObject = {
