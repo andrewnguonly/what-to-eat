@@ -163,6 +163,10 @@ const MealListItem = ({
       Alert.alert("Empty meal?", "Don't kid yourself...");
       return;
     }
+    if (newName == name) {
+      Alert.alert("Same meal?", "Don't kid yourself...");
+      return;
+    }
     await editMealName(name, newName);
     console.log(`Update meal name: ${name} --> ${newName}`);
     setEditMealDialogVisible(false);
