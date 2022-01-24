@@ -4,11 +4,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { getMeals } from "./Controller";
 import Meal from "./Meal";
 import TitleBar from "./components/TitleBar";
+import SearchBar from "./components/SearchBar";
 import MealList from "./components/MealList";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import NotificationService from "./notifications/NotificationService";
 
 export type RefreshDataFunction = () => void;
+export type SetQueryFunction = React.Dispatch<React.SetStateAction<string>>;
 
 const App = () => {
   // notifications
@@ -23,8 +25,10 @@ const App = () => {
   // app state
   const appState = useRef(AppState.currentState);
   const [data, setData] = useState<Meal[]>([]);
+  const [query, setQuery] = useState("");
+
   const refreshData = () => {
-    getMeals()
+    getMeals(query)
       .then((data) => setData(data))
       .catch((error) => console.error(error));
   };
@@ -57,11 +61,16 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    refreshData();
+  }, [query]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
           <TitleBar refreshData={refreshData} />
+          <SearchBar setQuery={setQuery} />
           <MealList data={data} refreshData={refreshData} />
         </ThemeProvider>
       </GestureHandlerRootView>

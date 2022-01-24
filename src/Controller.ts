@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Meal from "./Meal";
 
-export const getMeals = async () => {
+export const getMeals = async (query?: string) => {
   let keys: string[] = [];
   try {
     keys = await AsyncStorage.getAllKeys();
@@ -9,6 +9,12 @@ export const getMeals = async () => {
     // read key error
   }
   console.log(`Got keys: ${keys}`);
+
+  console.log(`Got query: ${query}`);
+  if (query != null && query.length > 0) {
+    keys = keys.filter((key) => key.toLowerCase().includes(query));
+    console.log(`Got filtered keys: ${keys}`);
+  }
 
   let pairs: [string, string | null][] = [];
   try {

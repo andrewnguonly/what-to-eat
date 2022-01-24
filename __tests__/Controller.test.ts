@@ -33,6 +33,28 @@ it("get meals", async () => {
   expect(meal2).toStrictEqual(new Meal(keys[2], 2, 1, false));
 });
 
+it("get meals with query", async () => {
+  const keys = ["burger", "pizza", "salad"];
+  const filteredKeys = ["pizza"];
+
+  AsyncStorageMock.getAllKeys = jest.fn(() => {
+    return Promise.resolve(["burger", "pizza", "salad"]);
+  });
+
+  AsyncStorageMock.multiGet = jest.fn(() => {
+    return Promise.resolve([
+      ["pizza", '{"name":"pizza","lastEatenTs":0,"eatenCount":1}'],
+    ]);
+  });
+
+  const meals = await Controller.getMeals("zz");
+  expect(AsyncStorageMock.multiGet).toBeCalledWith(filteredKeys);
+  expect(meals.length).toBe(1);
+
+  const meal0 = meals[0];
+  expect(meal0).toStrictEqual(new Meal(keys[1], 0, 1, false));
+});
+
 it("get meal by name, meal found", async () => {
   const mealName = "burger";
 
