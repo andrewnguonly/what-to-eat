@@ -259,6 +259,7 @@ const MealListItem = ({
           <Dialog.Description>Update your meal name</Dialog.Description>
           <Dialog.Input
             placeholder={name}
+            defaultValue={name}
             onChangeText={(meal) => setNewMealName(meal)}
           />
           <Dialog.Button label="Cancel" onPress={handleCancel} />
