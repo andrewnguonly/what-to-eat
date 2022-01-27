@@ -40,6 +40,7 @@ const MealList = ({
         />
       )}
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
     />
   );
 };
