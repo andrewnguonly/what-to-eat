@@ -23,6 +23,7 @@ const SearchBar = ({ setQuery }: { setQuery: SetQueryFunction }) => {
     searchBarInput: {
       backgroundColor: theme.secondaryColor,
       color: theme.primaryTextColor,
+      flex: 1,
       fontSize: 16,
       height: 45,
       marginLeft: 5,
