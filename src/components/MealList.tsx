@@ -1,7 +1,7 @@
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
-import { RefreshDataFunction } from "../App";
+import { RefreshDataFunction, ResetSearchFunction } from "../App";
 import Meal from "../Meal";
 import MealListItem from "./MealListItem";
 import { useTheme } from "../theme/ThemeProvider";
@@ -9,9 +9,11 @@ import { useTheme } from "../theme/ThemeProvider";
 const MealList = ({
   data,
   refreshData,
+  resetSearch,
 }: {
   data: Meal[];
   refreshData: RefreshDataFunction;
+  resetSearch: ResetSearchFunction;
 }) => {
   const { theme } = useTheme();
 
@@ -36,6 +38,7 @@ const MealList = ({
           eatenCount={item.eatenCount}
           deferred={item.deferred}
           refreshData={refreshData}
+          resetSearch={resetSearch}
           mealItemRefs={mealItemRefs}
         />
       )}

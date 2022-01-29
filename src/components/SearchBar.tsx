@@ -5,7 +5,13 @@ import { SetQueryFunction } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-const SearchBar = ({ setQuery }: { setQuery: SetQueryFunction }) => {
+const SearchBar = ({
+  textInputRef,
+  setQuery,
+}: {
+  textInputRef: any;
+  setQuery: SetQueryFunction;
+}) => {
   const { theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -45,6 +51,7 @@ const SearchBar = ({ setQuery }: { setQuery: SetQueryFunction }) => {
         size={18}
       />
       <TextInput
+        ref={textInputRef}
         style={styles.searchBarInput}
         autoCapitalize="none"
         autoCorrect={false}

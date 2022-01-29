@@ -9,7 +9,7 @@ import {
   faRedo,
   faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { RefreshDataFunction } from "../App";
+import { RefreshDataFunction, ResetSearchFunction } from "../App";
 import {
   addMeal,
   editMealName,
@@ -63,6 +63,7 @@ const MealListItem = ({
   eatenCount,
   deferred,
   refreshData,
+  resetSearch,
   mealItemRefs,
 }: {
   name: string;
@@ -70,6 +71,7 @@ const MealListItem = ({
   eatenCount: number;
   deferred: boolean;
   refreshData: RefreshDataFunction;
+  resetSearch: ResetSearchFunction;
   mealItemRefs: Map<string, Swipeable>;
 }) => {
   const { theme } = useTheme();
@@ -156,6 +158,7 @@ const MealListItem = ({
     setExistingMealDialogVisible(false);
     // refresh meals state data
     refreshData();
+    resetSearch();
   };
 
   const handleEditMeal = async () => {
@@ -173,6 +176,7 @@ const MealListItem = ({
     setNewMealName("");
     // refresh meals state data
     refreshData();
+    // do not reset search
   };
 
   const handleDeferMeal = async () => {
@@ -181,6 +185,7 @@ const MealListItem = ({
     setDeferMealDialogVisible(false);
     // refresh meals state data
     refreshData();
+    resetSearch();
   };
 
   const handleDeleteMeal = async () => {
@@ -188,6 +193,7 @@ const MealListItem = ({
     console.log(`Deleted existing meal: ${name}`);
     // refresh meals state data
     refreshData();
+    resetSearch();
   };
 
   const handleCancel = () => {

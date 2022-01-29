@@ -3,11 +3,17 @@ import { Alert, Image, Pressable, StyleSheet, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { RefreshDataFunction } from "../App";
+import { RefreshDataFunction, ResetSearchFunction } from "../App";
 import { addMeal } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
 
-const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
+const TitleBar = ({
+  refreshData,
+  resetSearch,
+}: {
+  refreshData: RefreshDataFunction;
+  resetSearch: ResetSearchFunction;
+}) => {
   const { theme } = useTheme();
 
   const styles = StyleSheet.create({
@@ -60,6 +66,7 @@ const TitleBar = ({ refreshData }: { refreshData: RefreshDataFunction }) => {
 
     // refresh meals state data
     refreshData();
+    resetSearch();
   };
 
   const handleCancel = () => {
