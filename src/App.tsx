@@ -1,14 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, AppState, SafeAreaView } from "react-native";
+import { Alert, AppState, SafeAreaView, TextInput } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { getMeals } from "./Controller";
 import Meal from "./Meal";
 import TitleBar from "./components/TitleBar";
+import SearchBar from "./components/SearchBar";
 import MealList from "./components/MealList";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import NotificationService from "./notifications/NotificationService";
 
 export type RefreshDataFunction = () => void;
+export type ResetSearchFunction = () => void;
+export type SetQueryFunction = React.Dispatch<React.SetStateAction<string>>;
 
 const App = () => {
   // notifications
@@ -23,10 +26,24 @@ const App = () => {
   // app state
   const appState = useRef(AppState.currentState);
   const [data, setData] = useState<Meal[]>([]);
+  const [query, setQuery] = useState("");
+
+  // child references
+  const searchBarTextInputRef = useRef<TextInput>(null);
+
   const refreshData = () => {
-    getMeals()
+    getMeals(query)
       .then((data) => setData(data))
       .catch((error) => console.error(error));
+  };
+
+  const resetSearch = () => {
+    if (searchBarTextInputRef.current !== null) {
+      setQuery("");
+      // TODO: Don't expose child component implementation in parent.
+      searchBarTextInputRef.current.clear();
+      searchBarTextInputRef.current.blur();
+    }
   };
 
   useEffect(() => {
@@ -57,12 +74,21 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    refreshData();
+  }, [query]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <TitleBar refreshData={refreshData} />
-          <MealList data={data} refreshData={refreshData} />
+          <TitleBar refreshData={refreshData} resetSearch={resetSearch} />
+          <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
+          <MealList
+            data={data}
+            refreshData={refreshData}
+            resetSearch={resetSearch}
+          />
         </ThemeProvider>
       </GestureHandlerRootView>
     </SafeAreaView>
