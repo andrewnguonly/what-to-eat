@@ -264,6 +264,7 @@ const MealListItem = ({
           <Dialog.Title>Edit meal</Dialog.Title>
           <Dialog.Description>Update your meal name</Dialog.Description>
           <Dialog.Input
+            autoFocus={true}
             placeholder={name}
             defaultValue={name}
             onChangeText={(meal) => setNewMealName(meal)}
