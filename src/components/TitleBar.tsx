@@ -89,6 +89,7 @@ const TitleBar = ({
             <Dialog.Title>New meal!</Dialog.Title>
             <Dialog.Description>Enter your meal</Dialog.Description>
             <Dialog.Input
+              autoFocus={true}
               placeholder="e.g. pizza"
               onChangeText={(meal) => setNewMeal(meal)}
             />
