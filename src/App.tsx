@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, AppState, SafeAreaView, TextInput } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { getMeals } from "./Controller";
 import Meal from "./Meal";
 import TitleBar from "./components/TitleBar";
@@ -27,6 +27,8 @@ const App = () => {
   const appState = useRef(AppState.currentState);
   const [data, setData] = useState<Meal[]>([]);
   const [query, setQuery] = useState("");
+  const mealListRef = useRef<FlatList>(null);
+  const mostRecentMeal = useRef<Meal>(data[data.length - 1]);
 
   // child references
   const searchBarTextInputRef = useRef<TextInput>(null);
@@ -42,7 +44,7 @@ const App = () => {
       setQuery("");
       // TODO: Don't expose child component implementation in parent.
       searchBarTextInputRef.current.clear();
-      searchBarTextInputRef.current.blur();
+      searchBarTextInputRef.current.blur(); // this doesn't work as expected
     }
   };
 
@@ -75,6 +77,24 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (
+      mostRecentMeal.current !== undefined &&
+      mostRecentMeal.current.name != data[data.length - 1].name &&
+      mealListRef.current !== null
+    ) {
+      // If the most recent meal was changed (added existing meal
+      // or deferred existing meal), scroll to the bottom of the
+      // screen.
+      //
+      // Known Issue: This logic doesn't apply when a new meal is
+      // added. `onContentSizeChange` attribute is implemented to
+      // handle this case.
+      mealListRef.current.scrollToEnd();
+    }
+    mostRecentMeal.current = data[data.length - 1];
+  }, [data]);
+
+  useEffect(() => {
     refreshData();
   }, [query]);
 
@@ -85,6 +105,7 @@ const App = () => {
           <TitleBar refreshData={refreshData} resetSearch={resetSearch} />
           <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
           <MealList
+            mealListRef={mealListRef}
             data={data}
             refreshData={refreshData}
             resetSearch={resetSearch}
