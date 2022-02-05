@@ -28,7 +28,6 @@ const App = () => {
   const [data, setData] = useState<Meal[]>([]);
   const [query, setQuery] = useState("");
   const mealListRef = useRef<FlatList>(null);
-  const mostRecentMeal = useRef<Meal>(data[data.length - 1]);
 
   // child references
   const searchBarTextInputRef = useRef<TextInput>(null);
@@ -75,24 +74,6 @@ const App = () => {
       subscription.remove();
     };
   }, []);
-
-  useEffect(() => {
-    if (
-      mostRecentMeal.current !== undefined &&
-      mostRecentMeal.current.name != data[data.length - 1].name &&
-      mealListRef.current !== null
-    ) {
-      // If the most recent meal was changed (added existing meal
-      // or deferred existing meal), scroll to the bottom of the
-      // screen.
-      //
-      // Known Issue: This logic doesn't apply when a new meal is
-      // added. `onContentSizeChange` attribute is implemented to
-      // handle this case.
-      mealListRef.current.scrollToEnd();
-    }
-    mostRecentMeal.current = data[data.length - 1];
-  }, [data]);
 
   useEffect(() => {
     refreshData();

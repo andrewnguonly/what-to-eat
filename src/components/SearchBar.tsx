@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { useTheme } from "../theme/ThemeProvider";
 import { SetQueryFunction } from "../App";
@@ -9,7 +9,7 @@ const SearchBar = ({
   textInputRef,
   setQuery,
 }: {
-  textInputRef: any;
+  textInputRef: RefObject<TextInput>;
   setQuery: SetQueryFunction;
 }) => {
   const { theme } = useTheme();
