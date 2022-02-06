@@ -156,8 +156,6 @@ const MealListItem = ({
     await addMeal(name);
     console.log(`Added existing meal: ${name}`);
     setExistingMealDialogVisible(false);
-    // refresh meals state data
-    refreshData();
     resetSearch();
   };
 
@@ -174,7 +172,6 @@ const MealListItem = ({
     console.log(`Update meal name: ${name} --> ${newName}`);
     setEditMealDialogVisible(false);
     setNewMealName("");
-    // refresh meals state data
     refreshData();
     // do not reset search
   };
@@ -183,16 +180,12 @@ const MealListItem = ({
     await deferMealByName(name);
     console.log(`Deferred meal: ${name}`);
     setDeferMealDialogVisible(false);
-    // refresh meals state data
-    refreshData();
     resetSearch();
   };
 
   const handleDeleteMeal = async () => {
     await deleteMealByName(name);
     console.log(`Deleted existing meal: ${name}`);
-    // refresh meals state data
-    refreshData();
     resetSearch();
   };
 

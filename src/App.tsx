@@ -38,12 +38,17 @@ const App = () => {
       .catch((error) => console.error(error));
   };
 
+  /**
+   * Resets search state and also refreshes data.
+   */
   const resetSearch = () => {
+    if (query == "") {
+      refreshData();
+    } else {
+      setQuery(""); // will force refresh data
+    }
     if (searchBarTextInputRef.current !== null) {
-      setQuery("");
-      // TODO: Don't expose child component implementation in parent.
       searchBarTextInputRef.current.clear();
-      searchBarTextInputRef.current.blur(); // this doesn't work as expected
     }
   };
 
@@ -83,7 +88,7 @@ const App = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <TitleBar refreshData={refreshData} resetSearch={resetSearch} />
+          <TitleBar resetSearch={resetSearch} />
           <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
           <MealList
             mealListRef={mealListRef}
