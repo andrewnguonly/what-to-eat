@@ -58,9 +58,6 @@ const App = () => {
     // notificationService.scheduleNotification(lunchNotification);
     // notificationService.scheduleNotification(dinnerNotification);
 
-    // refresh state data when app is started for the first time
-    refreshData();
-
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
