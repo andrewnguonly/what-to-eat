@@ -65,9 +65,6 @@ const App = () => {
       ) {
         // clear all notifications
         notificationService.cancelAllNotifications();
-
-        // refresh state data when app comes to the foreground
-        refreshData();
       }
       appState.current = nextAppState;
     });
@@ -77,6 +74,15 @@ const App = () => {
     };
   }, []);
 
+  // reset search / refresh data every 12 hours
+  useEffect(() => {
+    const interval = setInterval(() => {
+      resetSearch();
+    }, 1000 * 60 * 60 * 12);
+    return () => clearInterval(interval);
+  }, []);
+
+  // refresh data when search query changes
   useEffect(() => {
     refreshData();
   }, [query]);
