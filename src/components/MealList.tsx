@@ -1,5 +1,5 @@
 import React, { RefObject } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, TextInput, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { RefreshDataFunction, ResetSearchFunction } from "../App";
 import Meal from "../Meal";
@@ -7,11 +7,13 @@ import MealListItem from "./MealListItem";
 import { useTheme } from "../theme/ThemeProvider";
 
 const MealList = ({
+  searchBarTextInputRef,
   mealListRef,
   data,
   refreshData,
   resetSearch,
 }: {
+  searchBarTextInputRef: RefObject<TextInput>;
   mealListRef: RefObject<FlatList>;
   data: Meal[];
   refreshData: RefreshDataFunction;
@@ -36,6 +38,7 @@ const MealList = ({
       data={data}
       renderItem={({ item }) => (
         <MealListItem
+          searchBarTextInputRef={searchBarTextInputRef}
           name={item.name}
           lastEatenTs={item.lastEatenTs}
           eatenCount={item.eatenCount}

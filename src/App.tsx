@@ -47,9 +47,8 @@ const App = () => {
     } else {
       setQuery(""); // will force refresh data
     }
-    if (searchBarTextInputRef.current !== null) {
-      searchBarTextInputRef.current.clear();
-    }
+    searchBarTextInputRef.current?.clear();
+    searchBarTextInputRef.current?.blur();
   };
 
   useEffect(() => {
@@ -91,9 +90,13 @@ const App = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <TitleBar resetSearch={resetSearch} />
+          <TitleBar
+            searchBarTextInputRef={searchBarTextInputRef}
+            resetSearch={resetSearch}
+          />
           <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
           <MealList
+            searchBarTextInputRef={searchBarTextInputRef}
             mealListRef={mealListRef}
             data={data}
             refreshData={refreshData}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { RefObject, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
@@ -17,6 +17,7 @@ import {
   deleteMealByName,
 } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
+import { TextInput } from "react-native";
 
 /**
  * This function assumes 1 month = 28 days.
@@ -58,6 +59,7 @@ export const formatEatenCount = (eatenCount: number) => {
 };
 
 const MealListItem = ({
+  searchBarTextInputRef,
   name,
   lastEatenTs,
   eatenCount,
@@ -66,6 +68,7 @@ const MealListItem = ({
   resetSearch,
   mealItemRefs,
 }: {
+  searchBarTextInputRef: RefObject<TextInput>;
   name: string;
   lastEatenTs: number;
   eatenCount: number;
@@ -137,6 +140,7 @@ const MealListItem = ({
   const [deferMealDialogVisible, setDeferMealDialogVisible] = useState(false);
 
   const showExistingMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setExistingMealDialogVisible(true);
     [...mealItemRefs.entries()].forEach(([, ref]) => {
       // close all swipe menus
@@ -145,10 +149,12 @@ const MealListItem = ({
   };
 
   const showEditMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setEditMealDialogVisible(true);
   };
 
   const showDeferMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setDeferMealDialogVisible(true);
   };
 
