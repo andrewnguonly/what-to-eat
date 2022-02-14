@@ -1,17 +1,27 @@
-import React, { useState } from "react";
-import { Alert, Image, Pressable, StyleSheet, View } from "react-native";
+import React, { RefObject, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import Dialog from "react-native-dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { RefreshDataFunction, ResetSearchFunction } from "../App";
+import { ResetSearchFunction } from "../App";
 import { addMeal } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
 
 const TitleBar = ({
-  refreshData,
+  searchBarTextInputRef,
+  mealListRef,
   resetSearch,
 }: {
-  refreshData: RefreshDataFunction;
+  searchBarTextInputRef: RefObject<TextInput>;
+  mealListRef: RefObject<FlatList>;
   resetSearch: ResetSearchFunction;
 }) => {
   const { theme } = useTheme();
@@ -51,6 +61,7 @@ const TitleBar = ({
   const [newMeal, setNewMeal] = useState("");
 
   const showAddMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setNewMealDialogVisible(true);
   };
 
@@ -65,8 +76,8 @@ const TitleBar = ({
     setNewMeal("");
 
     // refresh meals state data
-    refreshData();
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleCancel = () => {
@@ -89,6 +100,7 @@ const TitleBar = ({
             <Dialog.Title>New meal!</Dialog.Title>
             <Dialog.Description>Enter your meal</Dialog.Description>
             <Dialog.Input
+              autoFocus={true}
               placeholder="e.g. pizza"
               onChangeText={(meal) => setNewMeal(meal)}
             />

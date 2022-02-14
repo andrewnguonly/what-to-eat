@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, AppState, SafeAreaView, TextInput } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
 import { getMeals } from "./Controller";
 import Meal from "./Meal";
 import TitleBar from "./components/TitleBar";
@@ -29,6 +29,7 @@ const App = () => {
   const [query, setQuery] = useState("");
 
   // child references
+  const mealListRef = useRef<FlatList>(null);
   const searchBarTextInputRef = useRef<TextInput>(null);
 
   const refreshData = () => {
@@ -37,13 +38,17 @@ const App = () => {
       .catch((error) => console.error(error));
   };
 
+  /**
+   * Resets search state and also refreshes data.
+   */
   const resetSearch = () => {
-    if (searchBarTextInputRef.current !== null) {
-      setQuery("");
-      // TODO: Don't expose child component implementation in parent.
-      searchBarTextInputRef.current.clear();
-      searchBarTextInputRef.current.blur();
+    if (query == "") {
+      refreshData();
+    } else {
+      setQuery(""); // will force refresh data
     }
+    searchBarTextInputRef.current?.clear();
+    searchBarTextInputRef.current?.blur();
   };
 
   useEffect(() => {
@@ -52,9 +57,6 @@ const App = () => {
     // notificationService.scheduleNotification(lunchNotification);
     // notificationService.scheduleNotification(dinnerNotification);
 
-    // refresh state data when app is started for the first time
-    refreshData();
-
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -62,9 +64,6 @@ const App = () => {
       ) {
         // clear all notifications
         notificationService.cancelAllNotifications();
-
-        // refresh state data when app comes to the foreground
-        refreshData();
       }
       appState.current = nextAppState;
     });
@@ -74,6 +73,15 @@ const App = () => {
     };
   }, []);
 
+  // reset search / refresh data every 12 hours
+  useEffect(() => {
+    const interval = setInterval(() => {
+      resetSearch();
+    }, 1000 * 60 * 60 * 12);
+    return () => clearInterval(interval);
+  }, []);
+
+  // refresh data when search query changes
   useEffect(() => {
     refreshData();
   }, [query]);
@@ -82,9 +90,15 @@ const App = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
-          <TitleBar refreshData={refreshData} resetSearch={resetSearch} />
+          <TitleBar
+            searchBarTextInputRef={searchBarTextInputRef}
+            mealListRef={mealListRef}
+            resetSearch={resetSearch}
+          />
           <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
           <MealList
+            searchBarTextInputRef={searchBarTextInputRef}
+            mealListRef={mealListRef}
             data={data}
             refreshData={refreshData}
             resetSearch={resetSearch}

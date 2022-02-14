@@ -1,5 +1,12 @@
-import React, { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { RefObject, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -17,6 +24,7 @@ import {
   deleteMealByName,
 } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
+import { TextInput } from "react-native";
 
 /**
  * This function assumes 1 month = 28 days.
@@ -65,6 +73,8 @@ const MealListItem = ({
   refreshData,
   resetSearch,
   mealItemRefs,
+  searchBarTextInputRef,
+  mealListRef,
 }: {
   name: string;
   lastEatenTs: number;
@@ -73,6 +83,8 @@ const MealListItem = ({
   refreshData: RefreshDataFunction;
   resetSearch: ResetSearchFunction;
   mealItemRefs: Map<string, Swipeable>;
+  searchBarTextInputRef: RefObject<TextInput>;
+  mealListRef: RefObject<FlatList>;
 }) => {
   const { theme } = useTheme();
 
@@ -137,6 +149,7 @@ const MealListItem = ({
   const [deferMealDialogVisible, setDeferMealDialogVisible] = useState(false);
 
   const showExistingMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setExistingMealDialogVisible(true);
     [...mealItemRefs.entries()].forEach(([, ref]) => {
       // close all swipe menus
@@ -145,10 +158,12 @@ const MealListItem = ({
   };
 
   const showEditMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setEditMealDialogVisible(true);
   };
 
   const showDeferMealDialog = () => {
+    searchBarTextInputRef.current?.blur();
     setDeferMealDialogVisible(true);
   };
 
@@ -156,9 +171,8 @@ const MealListItem = ({
     await addMeal(name);
     console.log(`Added existing meal: ${name}`);
     setExistingMealDialogVisible(false);
-    // refresh meals state data
-    refreshData();
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleEditMeal = async () => {
@@ -174,7 +188,6 @@ const MealListItem = ({
     console.log(`Update meal name: ${name} --> ${newName}`);
     setEditMealDialogVisible(false);
     setNewMealName("");
-    // refresh meals state data
     refreshData();
     // do not reset search
   };
@@ -183,16 +196,13 @@ const MealListItem = ({
     await deferMealByName(name);
     console.log(`Deferred meal: ${name}`);
     setDeferMealDialogVisible(false);
-    // refresh meals state data
-    refreshData();
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleDeleteMeal = async () => {
     await deleteMealByName(name);
     console.log(`Deleted existing meal: ${name}`);
-    // refresh meals state data
-    refreshData();
     resetSearch();
   };
 
