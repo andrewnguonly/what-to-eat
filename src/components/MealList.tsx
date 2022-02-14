@@ -38,7 +38,6 @@ const MealList = ({
       data={data}
       renderItem={({ item }) => (
         <MealListItem
-          searchBarTextInputRef={searchBarTextInputRef}
           name={item.name}
           lastEatenTs={item.lastEatenTs}
           eatenCount={item.eatenCount}
@@ -46,6 +45,8 @@ const MealList = ({
           refreshData={refreshData}
           resetSearch={resetSearch}
           mealItemRefs={mealItemRefs}
+          searchBarTextInputRef={searchBarTextInputRef}
+          mealListRef={mealListRef}
         />
       )}
       keyboardShouldPersistTaps="handled"

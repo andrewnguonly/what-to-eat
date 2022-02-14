@@ -1,5 +1,12 @@
 import React, { RefObject, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Dialog from "react-native-dialog";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -59,7 +66,6 @@ export const formatEatenCount = (eatenCount: number) => {
 };
 
 const MealListItem = ({
-  searchBarTextInputRef,
   name,
   lastEatenTs,
   eatenCount,
@@ -67,8 +73,9 @@ const MealListItem = ({
   refreshData,
   resetSearch,
   mealItemRefs,
+  searchBarTextInputRef,
+  mealListRef,
 }: {
-  searchBarTextInputRef: RefObject<TextInput>;
   name: string;
   lastEatenTs: number;
   eatenCount: number;
@@ -76,6 +83,8 @@ const MealListItem = ({
   refreshData: RefreshDataFunction;
   resetSearch: ResetSearchFunction;
   mealItemRefs: Map<string, Swipeable>;
+  searchBarTextInputRef: RefObject<TextInput>;
+  mealListRef: RefObject<FlatList>;
 }) => {
   const { theme } = useTheme();
 
@@ -163,6 +172,7 @@ const MealListItem = ({
     console.log(`Added existing meal: ${name}`);
     setExistingMealDialogVisible(false);
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleEditMeal = async () => {
@@ -187,6 +197,7 @@ const MealListItem = ({
     console.log(`Deferred meal: ${name}`);
     setDeferMealDialogVisible(false);
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleDeleteMeal = async () => {

@@ -1,6 +1,7 @@
 import React, { RefObject, useState } from "react";
 import {
   Alert,
+  FlatList,
   Image,
   Pressable,
   StyleSheet,
@@ -16,9 +17,11 @@ import { useTheme } from "../theme/ThemeProvider";
 
 const TitleBar = ({
   searchBarTextInputRef,
+  mealListRef,
   resetSearch,
 }: {
   searchBarTextInputRef: RefObject<TextInput>;
+  mealListRef: RefObject<FlatList>;
   resetSearch: ResetSearchFunction;
 }) => {
   const { theme } = useTheme();
@@ -74,6 +77,7 @@ const TitleBar = ({
 
     // refresh meals state data
     resetSearch();
+    setTimeout(() => mealListRef.current?.scrollToEnd(), 750);
   };
 
   const handleCancel = () => {

@@ -27,9 +27,9 @@ const App = () => {
   const appState = useRef(AppState.currentState);
   const [data, setData] = useState<Meal[]>([]);
   const [query, setQuery] = useState("");
-  const mealListRef = useRef<FlatList>(null);
 
   // child references
+  const mealListRef = useRef<FlatList>(null);
   const searchBarTextInputRef = useRef<TextInput>(null);
 
   const refreshData = () => {
@@ -92,6 +92,7 @@ const App = () => {
         <ThemeProvider>
           <TitleBar
             searchBarTextInputRef={searchBarTextInputRef}
+            mealListRef={mealListRef}
             resetSearch={resetSearch}
           />
           <SearchBar textInputRef={searchBarTextInputRef} setQuery={setQuery} />
