@@ -61,8 +61,15 @@ const TitleBar = ({
   const [newMeal, setNewMeal] = useState("");
 
   const showAddMealDialog = () => {
-    searchBarTextInputRef.current?.blur();
-    setNewMealDialogVisible(true);
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setNewMealDialogVisible(true), 500);
+    } else {
+      setNewMealDialogVisible(true);
+    }
   };
 
   const handleAddMeal = async () => {
