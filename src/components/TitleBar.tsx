@@ -66,7 +66,7 @@ const TitleBar = ({
     // screen. Note: This doesn't always work either...
     if (searchBarTextInputRef.current?.isFocused()) {
       searchBarTextInputRef.current?.blur();
-      setTimeout(() => setNewMealDialogVisible(true), 500);
+      setTimeout(() => setNewMealDialogVisible(true), 600);
     } else {
       setNewMealDialogVisible(true);
     }
