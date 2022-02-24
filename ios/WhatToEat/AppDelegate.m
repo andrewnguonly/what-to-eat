@@ -54,6 +54,32 @@ static void InitializeFlipper(UIApplication *application) {
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
 
+  // Create local notifications
+
+  // lunch
+  UNMutableNotificationContent *lunchNotifContent = [UNMutableNotificationContent new];
+  lunchNotifContent.title = @"Lunch time!";
+  lunchNotifContent.body = @"Don't forget to log your breakfast/lunch!";
+
+  NSDateComponents *lunchDateComponents = [NSDateComponents new];
+  lunchDateComponents.hour = 12;
+  UNCalendarNotificationTrigger *lunchTrigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:lunchDateComponents repeats:true];
+  UNNotificationRequest *lunchNotifRequest = [UNNotificationRequest requestWithIdentifier:@"1" content:lunchNotifContent trigger:lunchTrigger];
+
+  // dinner
+  UNMutableNotificationContent *dinnerNotifContent = [UNMutableNotificationContent new];
+  dinnerNotifContent.title = @"Dinner time!";
+  dinnerNotifContent.body = @"Don't forget to log your dinner!";
+
+  NSDateComponents *dinnerDateComponents = [NSDateComponents new];
+  dinnerDateComponents.hour = 20;
+  UNCalendarNotificationTrigger *dinnerTrigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:dinnerDateComponents repeats:true];
+  UNNotificationRequest *dinnerNotifRequest = [UNNotificationRequest requestWithIdentifier:@"2" content:dinnerNotifContent trigger:dinnerTrigger];
+
+  // schedule notifications
+  [center addNotificationRequest:lunchNotifRequest withCompletionHandler:^(NSError * _Nullable error) {}];
+  [center addNotificationRequest:dinnerNotifRequest withCompletionHandler:^(NSError * _Nullable error) {}];
+
   return YES;
 }
 
@@ -92,7 +118,9 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
   [RNCPushNotificationIOS didReceiveNotificationResponse:response];
 }
 // Called when a notification is delivered to a foreground app.
--(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center
+      willPresentNotification:(UNNotification *)notification
+        withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
   completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
 }

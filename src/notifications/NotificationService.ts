@@ -21,4 +21,8 @@ export default class NotificationService {
     PushNotification.cancelAllLocalNotifications();
     PushNotification.setApplicationIconBadgeNumber(0);
   }
+
+  setApplicationIconBadgeNumber(number: number) {
+    PushNotification.setApplicationIconBadgeNumber(number);
+  }
 }
