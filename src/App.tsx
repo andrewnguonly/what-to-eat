@@ -62,8 +62,8 @@ const App = () => {
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        // clear all notifications
-        notificationService.cancelAllNotifications();
+        console.log("App coming into active state...");
+        notificationService.setApplicationIconBadgeNumber(0);
       }
       appState.current = nextAppState;
     });

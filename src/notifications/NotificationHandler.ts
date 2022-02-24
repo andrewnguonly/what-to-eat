@@ -21,7 +21,7 @@ const handler = new NotificationHandler();
 
 PushNotification.configure({
   onNotification: handler.onNotification.bind(handler),
-  requestPermissions: false,
+  requestPermissions: true,
 });
 
 export default handler;

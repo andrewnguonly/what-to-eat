@@ -149,22 +149,43 @@ const MealListItem = ({
   const [deferMealDialogVisible, setDeferMealDialogVisible] = useState(false);
 
   const showExistingMealDialog = () => {
-    searchBarTextInputRef.current?.blur();
-    setExistingMealDialogVisible(true);
     [...mealItemRefs.entries()].forEach(([, ref]) => {
       // close all swipe menus
       ref.close();
     });
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setExistingMealDialogVisible(true), 600);
+    } else {
+      setExistingMealDialogVisible(true);
+    }
   };
 
   const showEditMealDialog = () => {
-    searchBarTextInputRef.current?.blur();
-    setEditMealDialogVisible(true);
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setEditMealDialogVisible(true), 600);
+    } else {
+      setEditMealDialogVisible(true);
+    }
   };
 
   const showDeferMealDialog = () => {
-    searchBarTextInputRef.current?.blur();
-    setDeferMealDialogVisible(true);
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setDeferMealDialogVisible(true), 600);
+    } else {
+      setDeferMealDialogVisible(true);
+    }
   };
 
   const handleExistingMeal = async () => {

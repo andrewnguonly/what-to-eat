@@ -40,10 +40,16 @@ const TitleBar = ({
       flex: 1,
       paddingLeft: "5%",
     },
+    rightButton: {
+      alignItems: "center",
+      height: 50,
+      justifyContent: "center",
+      width: 50,
+    },
     rightButtonContainer: {
       alignItems: "flex-end",
       flex: 1,
-      paddingRight: "5%",
+      height: 50,
     },
     titleBar: {
       alignItems: "center",
@@ -61,8 +67,15 @@ const TitleBar = ({
   const [newMeal, setNewMeal] = useState("");
 
   const showAddMealDialog = () => {
-    searchBarTextInputRef.current?.blur();
-    setNewMealDialogVisible(true);
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setNewMealDialogVisible(true), 600);
+    } else {
+      setNewMealDialogVisible(true);
+    }
   };
 
   const handleAddMeal = async () => {
@@ -94,7 +107,7 @@ const TitleBar = ({
         />
       </View>
       <View style={styles.rightButtonContainer}>
-        <Pressable onPress={showAddMealDialog}>
+        <Pressable style={styles.rightButton} onPress={showAddMealDialog}>
           <FontAwesomeIcon icon={faPlus} color={"white"} size={18} />
           <Dialog.Container visible={newMealDialogVisible}>
             <Dialog.Title>New meal!</Dialog.Title>
