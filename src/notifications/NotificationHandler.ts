@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import PushNotification from "react-native-push-notification";
 
 class NotificationHandler {
@@ -21,7 +22,7 @@ const handler = new NotificationHandler();
 
 PushNotification.configure({
   onNotification: handler.onNotification.bind(handler),
-  requestPermissions: true,
+  requestPermissions: Platform.OS === "ios",
 });
 
 export default handler;

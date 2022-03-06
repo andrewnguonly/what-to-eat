@@ -147,6 +147,7 @@ const MealListItem = ({
     useState(false);
   const [editMealDialogVisible, setEditMealDialogVisible] = useState(false);
   const [deferMealDialogVisible, setDeferMealDialogVisible] = useState(false);
+  const [deleteMealDialogVisible, setDeleteMealDialogVisible] = useState(false);
 
   const showExistingMealDialog = () => {
     [...mealItemRefs.entries()].forEach(([, ref]) => {
@@ -188,6 +189,18 @@ const MealListItem = ({
     }
   };
 
+  const showDeleteMealDialog = () => {
+    // This is a hack that forces the keyboard to dismiss prior to the
+    // dialog appearing. This allows the dialog to be centered in the
+    // screen. Note: This doesn't always work either...
+    if (searchBarTextInputRef.current?.isFocused()) {
+      searchBarTextInputRef.current?.blur();
+      setTimeout(() => setDeferMealDialogVisible(true), 600);
+    } else {
+      setDeleteMealDialogVisible(true);
+    }
+  };
+
   const handleExistingMeal = async () => {
     await addMeal(name);
     console.log(`Added existing meal: ${name}`);
@@ -224,13 +237,16 @@ const MealListItem = ({
   const handleDeleteMeal = async () => {
     await deleteMealByName(name);
     console.log(`Deleted existing meal: ${name}`);
-    resetSearch();
+    setDeleteMealDialogVisible(false);
+    refreshData();
+    // do not reset search
   };
 
   const handleCancel = () => {
     setExistingMealDialogVisible(false);
     setEditMealDialogVisible(false);
     setDeferMealDialogVisible(false);
+    setDeleteMealDialogVisible(false);
     mealItemRefs.get(name)?.close();
   };
 
@@ -243,7 +259,7 @@ const MealListItem = ({
         <Pressable style={styles.deferButton} onPress={showDeferMealDialog}>
           <FontAwesomeIcon icon={faRedo} color={"white"} size={18} />
         </Pressable>
-        <Pressable style={styles.deleteButton} onPress={handleDeleteMeal}>
+        <Pressable style={styles.deleteButton} onPress={showDeleteMealDialog}>
           <FontAwesomeIcon icon={faTrashAlt} color={"white"} size={18} />
         </Pressable>
       </View>
@@ -308,6 +324,14 @@ const MealListItem = ({
           <Dialog.Description>Don't wanna eat {name} now?</Dialog.Description>
           <Dialog.Button label="Cancel" onPress={handleCancel} />
           <Dialog.Button label="Later" onPress={handleDeferMeal} />
+        </Dialog.Container>
+        <Dialog.Container visible={deleteMealDialogVisible}>
+          <Dialog.Title>Delete</Dialog.Title>
+          <Dialog.Description>
+            Don't wanna eat {name} anymore?
+          </Dialog.Description>
+          <Dialog.Button label="Cancel" onPress={handleCancel} />
+          <Dialog.Button label="Delete" onPress={handleDeleteMeal} />
         </Dialog.Container>
       </Pressable>
     </Swipeable>
