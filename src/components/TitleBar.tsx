@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Dialog from "react-native-dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ResetSearchFunction } from "../App";
 import { addMeal } from "../Controller";
 import { useTheme } from "../theme/ThemeProvider";
@@ -35,10 +35,15 @@ const TitleBar = ({
       color: "white",
       fontSize: 20,
     },
+    leftButton: {
+      alignItems: "center",
+      height: 50,
+      justifyContent: "center",
+      width: 50,
+    },
     leftButtonContainer: {
       alignItems: "flex-start",
       flex: 1,
-      paddingLeft: "5%",
     },
     rightButton: {
       alignItems: "center",
@@ -78,6 +83,11 @@ const TitleBar = ({
     }
   };
 
+  const showSettingsDialog = () => {
+    Alert.alert("Settings", "Custom settings coming soon!");
+    return;
+  };
+
   const handleAddMeal = async () => {
     if (newMeal == "") {
       Alert.alert("Empty meal?", "Don't kid yourself...");
@@ -99,7 +109,11 @@ const TitleBar = ({
 
   return (
     <View style={styles.titleBar}>
-      <View style={styles.leftButtonContainer} />
+      <View style={styles.leftButtonContainer}>
+        <Pressable style={styles.leftButton} onPress={showSettingsDialog}>
+          <FontAwesomeIcon icon={faCog} color={"white"} size={18} />
+        </Pressable>
+      </View>
       <View style={styles.titleContainer}>
         <Image
           style={styles.appIcon}
